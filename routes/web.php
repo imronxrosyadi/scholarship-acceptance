@@ -1,15 +1,18 @@
 <?php
 
-use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\AlternativeComparisonController;
+use App\Http\Controllers\AlternativeController;
+use App\Http\Controllers\CalculateController;
+use App\Http\Controllers\CriteriaComparisonController;
 use App\Http\Controllers\CriteriaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\MasterCriteriaController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ValueWeightController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Category;
+use App\Models\CriteriaComparison;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,15 +105,32 @@ Route::get('/dashboard', function() {
 // Route::get('/candidate/create', [CandidateController::class, 'create']);
 // Route::post('/candidate', [CandidateController::class, 'store']);
 
-Route::resource('/candidate', CandidateController::class);
+Route::resource('/alternative', AlternativeController::class);
 
 // Route::get('/criteria', [CriteriaController::class, 'index']);
 // Route::get('/criteria/create', [CriteriaController::class, 'create']);
 // Route::post('/criteria', [CriteriaController::class, 'store']);
 
-Route::resource('/criteria', MasterCriteriaController::class);
+Route::resource('/criteria', CriteriaController::class);
 
 // Route::get('/value-weight', [ValueWeightController::class, 'index']);
 // Route::post('/value-weight', [ValueWeightController::class, 'store']);
 
 Route::resource('/value-weight', ValueWeightController::class);
+
+Route::prefix('/calculate')->group(function () {
+    Route::get('/criteria-comparison', [CriteriaComparisonController::class, 'index']);
+    // Route::resource('/criteria-comparison', CriteriaComparisonController::class);
+    Route::post('/criteria-comparison', [CriteriaComparisonController::class, 'store'])->name('criteria-comparison.store');
+
+    Route::get('/alternative-comparison', [AlternativeComparisonController::class, 'index']);
+    Route::get('/alternative-comparison/{id}', [AlternativeComparisonController::class, 'show']);
+    Route::post('/alternative-comparison', [AlternativeComparisonController::class, 'store'])->name('alternative-comparison.store');
+    // Route::post('/criteria-comparison', [CalculateController::class, 'storeCriteriaComparisons']);
+    // Route::get('/alternative-comparison', [CalculateController::class, 'alternativeComparisons']);
+    // Route::post('/alternative-comparison', [CalculateController::class, 'storeAlternativeComparisons']);
+    // Route::get('/result', [CalculateController::class, 'result']);
+
+});
+
+

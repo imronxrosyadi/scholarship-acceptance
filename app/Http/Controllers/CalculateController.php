@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Criteria;
 use Illuminate\Http\Request;
 
-class CriteriaController extends Controller
+class CalculateController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,10 +13,14 @@ class CriteriaController extends Controller
      */
     public function index()
     {
-        return view('criteria.index', [
-            'title' => 'Criteria',
-            'active' => 'criteria',
-            "criterias" => Criteria::latest()->paginate(100)->withQueryString()
+        //
+    }
+
+    public function criteriaComparisons()
+    {
+        return view('criteria-comparison.index', [
+            'title' => 'Criteria Comparison',
+            'active' => 'criteria-comparison'
         ]);
     }
 
@@ -28,10 +31,7 @@ class CriteriaController extends Controller
      */
     public function create()
     {
-        return view('criteria.create', [
-            'title' => 'Criteria',
-            'active' => 'criteria'
-        ]);
+        //
     }
 
     /**
@@ -42,22 +42,16 @@ class CriteriaController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|max:255'
-        ]);
-
-        Criteria::create($validatedData);
-
-        return redirect('/criteria')->with('success', 'Created criteria success!');
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Criteria  $criteria
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Criteria $criteria)
+    public function show($id)
     {
         //
     }
@@ -65,10 +59,10 @@ class CriteriaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Criteria  $criteria
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Criteria $criteria)
+    public function edit($id)
     {
         //
     }
@@ -77,10 +71,10 @@ class CriteriaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Criteria  $criteria
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Criteria $criteria)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -88,10 +82,10 @@ class CriteriaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Criteria  $criteria
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Criteria $criteria)
+    public function destroy($id)
     {
         //
     }

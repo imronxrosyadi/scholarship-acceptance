@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateValueWeightsTable extends Migration
+class CreatePriorityVectorAlternativesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateValueWeightsTable extends Migration
      */
     public function up()
     {
-        Schema::create('value_weights', function (Blueprint $table) {
+        Schema::create('priority_vector_alternatives', function (Blueprint $table) {
             $table->id();
-            $table->integer('value');
-            $table->string('description');
+            $table->foreignId('alternative_id')->references('id')->on('alternatives');
+            $table->foreignId('criteria_id')->references('id')->on('criterias');
+            $table->float('value');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateValueWeightsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('value_weights');
+        Schema::dropIfExists('priority_vector_alternatives');
     }
 }

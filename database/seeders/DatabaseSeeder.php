@@ -3,9 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
-use App\Models\Category;
-use App\Models\Post;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,24 +13,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory(3)->create();
-
-        Category::create([
-            'name' => 'Programming',
-            'slug' => 'programming'
+        $this->call([
+            ValueWeightSeeder::class,
+            IndeksRandomConsistencySeeder::class
         ]);
+        // User::factory(3)->create();
 
-        Category::create([
-            'name' => 'Personal',
-            'slug' => 'personal'
-        ]);
+        // Category::create([
+        //     'name' => 'Programming',
+        //     'slug' => 'programming'
+        // ]);
 
-        Category::create([
-            'name' => 'Data Science',
-            'slug' => 'data-science'
-        ]);
+        // Category::create([
+        //     'name' => 'Personal',
+        //     'slug' => 'personal'
+        // ]);
 
-        Post::factory(20)->create();
+        // Category::create([
+        //     'name' => 'Data Science',
+        //     'slug' => 'data-science'
+        // ]);
+
+        // Post::factory(20)->create();
 
         // User::create([
         //     'name' => 'Imron Rosyadi',

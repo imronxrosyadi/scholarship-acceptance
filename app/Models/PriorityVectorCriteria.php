@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ValueWeight extends Model
+class PriorityVectorCriteria extends Model
 {
     use HasFactory;
 
     protected $guarded = ['id'];
 
-    public function criteriaComparisons()
+    public function criterias()
     {
-        return $this->hasMany(CriteriaComparison::class, 'value_weight_id', 'id');
+        return $this->belongsTo(Criteria::class);
     }
 }

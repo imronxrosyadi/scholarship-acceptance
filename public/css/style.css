@@ -9,6 +9,11 @@
     font-weight: 400;
 } */
 
+.table-row {
+    cursor:pointer;
+}
+    
+
 .form-signin .form-floating:focus-within {
     z-index: 2;
 }

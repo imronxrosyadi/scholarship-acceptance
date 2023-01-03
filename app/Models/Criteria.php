@@ -15,4 +15,24 @@ class Criteria extends Model
     // {
     //     return 'slug';
     // }
+
+    public function firstCriteriaComparisons()
+    {
+        return $this->hasMany(CriteriaComparison::class, 'id');
+    }
+
+    public function secondCriteriaComparisons()
+    {
+        return $this->hasMany(CriteriaComparison::class, 'id');
+    }
+
+    public function priorityVectorCriterias()
+    {
+        return $this->belongsTo(PriorityVectorCriteria::class);
+    }
+
+    public function alternativeComparison()
+    {
+        return $this->belongsTo(AlternativeComparison::class, 'id');
+    }
 }
