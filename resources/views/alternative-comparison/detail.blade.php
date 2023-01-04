@@ -68,6 +68,9 @@
                 </div>
                 <div class="card-footer">
                     <div class="text-center">
+                        <a class="btn btn-outline-danger" href="/calculate/alternative-comparison">
+                            <span class="text">Back</span>
+                        </a>
                         <button class="btn btn-primary btn">
                             <span class="text">Submit</span>
                         </button>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Criteria;
+use App\Models\CriteriaComparison;
 use Illuminate\Http\Request;
 
 class CalculateController extends Controller
@@ -13,7 +15,41 @@ class CalculateController extends Controller
      */
     public function index()
     {
-        //
+        $criteriaComparisons = CriteriaComparison::with([
+            'firstCriterias',
+            'valueWeights',
+            'secondCriterias'
+        ])->get();
+
+        // @dd($criteriaComparisons);
+        $criterias = Criteria::all();
+
+        $matrik = array();
+        for($x=0; $x <= count($criterias)-2; $x++) {
+            for($y=($x+1); $y <= count($criterias)-1; $y++) {
+                $matrik[$x][$y] = $criteriaComparisons[$y]->valueWeights[0]->value;
+                $matrik[$y][$x] = 1/$criteriaComparisons[$x]->valueWeights[0]->value;
+            }
+        }
+
+        // for($i = 0; $i <= count($matrik); $i++) {
+        //     $matrik[$x][$x] = 1;
+        // }
+
+        
+        // for($i=0; $i <  count($matrik); $i++) {
+        //     for($j=0; $j < count($matrik[$i]); $j++) {
+        //         echo $matrik[$i][$j] ?? 1 . " ";
+        //     }
+        //     echo "\r\n";
+        // }
+
+        @dd($matrik);
+        return view('calculate.index', [
+            'title' => 'Calculate',
+            'active' => 'calculate',
+            'matrik' => $matrik
+        ]);
     }
 
     public function criteriaComparisons()

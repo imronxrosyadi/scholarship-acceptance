@@ -131,6 +131,8 @@ Route::prefix('/calculate')->group(function () {
     // Route::post('/alternative-comparison', [CalculateController::class, 'storeAlternativeComparisons']);
     // Route::get('/result', [CalculateController::class, 'result']);
 
+    Route::get('/result', [CalculateController::class, 'index']);
+
 });
 
 
