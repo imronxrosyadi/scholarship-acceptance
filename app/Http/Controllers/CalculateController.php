@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Alternative;
 use App\Models\Criteria;
 use App\Models\CriteriaComparison;
 use App\Models\IndeksRandomConsistency;
+use App\Models\PriorityVectorAlternative;
+use App\Models\PriorityVectorCriteria;
 use Illuminate\Http\Request;
 
 class CalculateController extends Controller
@@ -42,46 +45,85 @@ class CalculateController extends Controller
 
         for ($x=0; $x <= ($clength-1); $x++) { 
             for ($y=0; $y <= ( $clength-1); $y++) { 
-                echo ($matrik[$x][$y])."-";
+                // echo ($matrik[$x][$y])."-";
             }
         }
+
+
+
+
+        $jmlKriteria 	= Criteria::all()->count();
+        $jmlAlternatif	= Alternative::all()->count();
+        $nilai			= array();
+
+        // echo "al".$jmlAlternatif;
+        // echo "al".$jmlKriteria;
+
+        $alternative= Alternative::all();
+
+        for ($x=0; $x <= ($jmlAlternatif-1); $x++) {
+            // inisialisasi
+            $nilai[$x] = 0;
+            for ($y=0; $y <= ($jmlKriteria-1); $y++) {
+                $id_alternatif 	= $alternative[$x]->id;
+                $id_kriteria	= $criterias[$y]->id;
+
+                // $pv_alternatif	= getAlternatifPV($id_alternatif,$id_kriteria);
+                // @dd($id_alternatif);
+                // @dd($id_kriteria);
+                $pv_alternatif  = PriorityVectorAlternative::select('value')->where('alternative_id',$id_alternatif)->where('criteria_id', $id_kriteria)->first();
+                $pv_kriteria	= PriorityVectorCriteria::select('value')->where('criteria_id', $id_kriteria)->first();
+                echo $id_kriteria."-";
+                // @dump($pv_kriteria['value']);
+                                
+                // $nilai[$x]	 	+= ( $pv_alternatif['value'] * $pv_kriteria['value']);
+            }
+        }
+
+
+        // for($x=0; $x <= count($nilai)-1; $x++){
+        //     echo $nilai[$x]."--";
+        // }
+
+
 
         //matrik sudah sesuai
 
         $jmlmpb = array();
 	    $jmlmnk = array();
-	for ($i=0; $i <= ( $clength-1); $i++) {
-		$jmlmpb[$i] = 0;
-		$jmlmnk[$i] = 0;
-	}
+	// for ($i=0; $i <= ( $clength-1); $i++) {
+	// 	$jmlmpb[$i] = 0;
+	// 	$jmlmnk[$i] = 0;
+	// }
 
-    for ($x=0; $x <= ($clength-1) ; $x++) {
-		for ($y=0; $y <= ($clength-1) ; $y++) {
-			$value		= $matrik[$x][$y];
-			$jmlmpb[$y] += $value;
-		}
-	}
+    // for ($x=0; $x <= ($clength-1) ; $x++) {
+	// 	for ($y=0; $y <= ($clength-1) ; $y++) {
+	// 		$value		= $matrik[$x][$y];
+	// 		$jmlmpb[$y] += $value;
+	// 	}
+	// }
 
     
-    for ($x=0; $x <= ( $clength-1) ; $x++) {
-		for ($y=0; $y <= ( $clength-1) ; $y++) {
-			$matrikb[$x][$y] = $matrik[$x][$y] / $jmlmpb[$y];
-			$value	= $matrikb[$x][$y];
-			$jmlmnk[$x] += $value;
-		}
+    // for ($x=0; $x <= ( $clength-1) ; $x++) {
+	// 	for ($y=0; $y <= ( $clength-1) ; $y++) {
+	// 		$matrikb[$x][$y] = $matrik[$x][$y] / $jmlmpb[$y];
+	// 		$value	= $matrikb[$x][$y];
+	// 		$jmlmnk[$x] += $value;
+	// 	}
 
-		// nilai priority vektor
-		$pv[$x]	 = $jmlmnk[$x] /  $clength;
+	// 	// nilai priority vektor
+	// 	$pv[$x]	 = $jmlmnk[$x] /  $clength;
 
-		// memasukkan nilai priority vektor ke dalam tabel pv_kriteria dan pv_alternatif
-		$id_kriteria = $this->getKriteriaID($x);
-		$this->inputKriteriaPV($id_kriteria,$pv[$x]);
+	// 	// memasukkan nilai priority vektor ke dalam tabel pv_kriteria dan pv_alternatif
+	// 	$id_kriteria = Criteria::select('id')->first();
+	// 	$this->inputKriteriaPV($id_kriteria,$pv[$x]);
 
-	}
+	// }
 
-    $eigenvektor = $this->getEigenVector($jmlmpb,$jmlmnk, $clength);
-	$consIndex   = $this->getConsIndex($jmlmpb,$jmlmnk, $clength);
-	$consRatio   = $this->getConsRatio($jmlmpb,$jmlmnk, $clength);
+
+    // $eigenvektor = $this->getEigenVector($jmlmpb,$jmlmnk, $clength);
+	// $consIndex   = $this->getConsIndex($jmlmpb,$jmlmnk, $clength);
+	// $consRatio   = $this->getConsRatio($jmlmpb,$jmlmnk, $clength);
 
 
         return view('calculate.index', [
@@ -90,6 +132,39 @@ class CalculateController extends Controller
             'matrik' => $matrik,
             'criterias' =>$criterias
         ]);
+    }
+
+    function inputKriteriaPV ($id_kriteria,$pv) {
+        include ('config.php');
+    
+        $query = "SELECT * FROM pv_kriteria WHERE id_kriteria=$id_kriteria";
+        $result = mysqli_query($koneksi, $query);
+
+        $criteria = Criteria::select('id')->where('id',$id_kriteria)->first();
+
+    
+        if ($criteria) {
+            echo "Error !!!";
+            exit();
+        } else {
+
+        }
+    
+        // jika result kosong maka masukkan data baru
+        // jika telah ada maka diupdate
+        if (mysqli_num_rows($result)==0) {
+            $query = "INSERT INTO pv_kriteria (id_kriteria, nilai) VALUES ($id_kriteria, $pv)";
+        } else {
+            $query = "UPDATE pv_kriteria SET nilai=$pv WHERE id_kriteria=$id_kriteria";
+        }
+    
+    
+        $result = mysqli_query($koneksi, $query);
+        if(!$result) {
+            echo "Gagal memasukkan / update nilai priority vector kriteria";
+            exit();
+        }
+    
     }
     
     function getEigenVector($matrik_a,$matrik_b, $clength) {
@@ -111,6 +186,7 @@ class CalculateController extends Controller
     
     // Mencari Consistency Ratio
     function getConsRatio($matrik_a,$matrik_b, $clength) {
+        @dd($clength."length");
         $indeksRandomConsistency = IndeksRandomConsistency::select('value')->where('amount', $clength)->first();
 
         $consindex = $this->getConsIndex($matrik_a,$matrik_b, $clength);
