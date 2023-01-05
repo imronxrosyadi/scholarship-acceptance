@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Criteria;
 use App\Models\CriteriaComparison;
+use App\Models\IndeksRandomConsistency;
 use Illuminate\Http\Request;
 
 class CalculateController extends Controller
@@ -110,10 +111,11 @@ class CalculateController extends Controller
     
     // Mencari Consistency Ratio
     function getConsRatio($matrik_a,$matrik_b, $clength) {
+        $indeksRandomConsistency = IndeksRandomConsistency::select('value')->where('amount', $clength)->first();
+
         $consindex = $this->getConsIndex($matrik_a,$matrik_b, $clength);
-        $consratio = $consindex / getNilaiIR( $clength);
+        $consratio = $consindex / $indeksRandomConsistency;
         // ambil nilai IR konstanta di DB
-        
         return $consratio;
     }
 
