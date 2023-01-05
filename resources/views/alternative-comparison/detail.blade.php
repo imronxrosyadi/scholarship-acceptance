@@ -22,27 +22,27 @@
                                     <th>First Alternative</th>
                                     <th>Value Weight</th>
                                     <th>Second Alternative</th>
-                                    <th>count($alternatives)</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if ($alternativeComparisons)
-                                @foreach($alternativeComparisons as $alternativeComparison)
-                                    <tr>
-                                        <input type="text" name="type" value="update" hidden>
-                                        <td><input type="text" name="firstAlternatives[]" value="{{ $alternativeComparison->firstAlternatives->id }}" hidden>{{ $alternativeComparison->firstAlternatives->name }}</td>
-                                        <td>
-                                            <select class="form-select" name="valueWeights[]">
-                                                <option selected value="{{ $alternativeComparison->valueWeights->id }}">{{ ('(' . ($alternativeComparison->valueWeights->value) . ') ' . ($alternativeComparison->valueWeights->description)) ?? 'Select value weight' }}</option>
-                                                @foreach($valueWeights as $valueWeight)
-                                                <option value="{{ $valueWeight->id }}">{{ '(' . ($valueWeight->value) . ') ' . ($valueWeight->description) }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td><input type="text" name="secondAlternatives[]" value="{{ $alternativeComparison->secondAlternatives->id }}" hidden>{{ $alternativeComparison->secondAlternatives->name }}</td>
-                                        <input type="text" name="criteria" value="{{ $alternativeComparison->criterias[0]->id }}" hidden>
-                                    </tr>
-                                @endforeach
+                                @if (count($alternativeComparisons) > 0)
+                                    @foreach($alternativeComparisons as $alternativeComparison)
+                                        <tr>
+                                            <input type="text" name="type" value="update" hidden>
+                                            <input type="text" name="id[]" value="{{ $alternativeComparison->id }}" hidden>
+                                            <td><input type="text" name="firstAlternatives[]" value="{{ $alternativeComparison->firstAlternatives->id }}" hidden>{{ $alternativeComparison->firstAlternatives->name }}</td>
+                                            <td>
+                                                <select class="form-select" name="valueWeights[]">
+                                                    <option selected value="{{ $alternativeComparison->valueWeights->id }}">{{ ('(' . ($alternativeComparison->valueWeights->value) . ') ' . ($alternativeComparison->valueWeights->description)) ?? 'Select value weight' }}</option>
+                                                    @foreach($valueWeights as $valueWeight)
+                                                    <option value="{{ $valueWeight->id }}">{{ '(' . ($valueWeight->value) . ') ' . ($valueWeight->description) }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td><input type="text" name="secondAlternatives[]" value="{{ $alternativeComparison->secondAlternatives->id }}" hidden>{{ $alternativeComparison->secondAlternatives->name }}</td>
+                                            <input type="text" name="criteria" value="{{ $alternativeComparison->criterias[0]->id }}" hidden>
+                                        </tr>
+                                    @endforeach
                                 @else
                                     @for ($x = 0; $x <= (count($alternatives)-2); $x++) 
                                         @for ($y=($x+1); $y <=(count($alternatives)-1); $y++) 
@@ -59,7 +59,7 @@
                                                     </select>
                                                 </td>
                                                 <td><input type="text" name="secondAlternatives[]" value="{{ $alternatives[$y]->id }}" hidden>{{ $alternatives[$y]->name }}</td>
-                                                <input type="text" name="criteria" value="{{ $criteria->id }}" hidden>
+                                                <input type="text" name="criteria" value="{{ $criterias[$x]->id }}" hidden>
                                             </tr>
                                         @endfor
                                     @endfor
