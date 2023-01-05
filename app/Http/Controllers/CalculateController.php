@@ -25,31 +25,96 @@ class CalculateController extends Controller
         $criterias = Criteria::all();
 
         $matrik = array();
-        for($x=0; $x <= count($criterias)-2; $x++) {
-            for($y=($x+1); $y <= count($criterias)-1; $y++) {
-                $matrik[$x][$y] = $criteriaComparisons[$y]->valueWeights[0]->value;
-                $matrik[$y][$x] = 1/$criteriaComparisons[$x]->valueWeights[0]->value;
+        $urut = 0;
+        $clength= count($criterias);
+        for($x=0; $x <=  $clength-2; $x++) {
+            for($y=($x+1); $y <=  $clength-1; $y++) {
+                $matrik[$x][$y] = $criteriaComparisons[$urut]->valueWeights[0]->value;
+                $matrik[$y][$x] = 1/$criteriaComparisons[$urut]->valueWeights[0]->value;
+                $urut++;
             }
         }
 
-        // for($i = 0; $i <= count($matrik); $i++) {
-        //     $matrik[$x][$x] = 1;
-        // }
+        for($i = 0; $i <= count($matrik)-1; $i++) {
+            $matrik[$i][$i] = 1;
+        }
 
-        
-        // for($i=0; $i <  count($matrik); $i++) {
-        //     for($j=0; $j < count($matrik[$i]); $j++) {
-        //         echo $matrik[$i][$j] ?? 1 . " ";
-        //     }
-        //     echo "\r\n";
-        // }
+        for ($x=0; $x <= ($clength-1); $x++) { 
+            for ($y=0; $y <= ( $clength-1); $y++) { 
+                echo ($matrik[$x][$y])."-";
+            }
+        }
 
-        @dd($matrik);
+        //matrik sudah sesuai
+
+        $jmlmpb = array();
+	    $jmlmnk = array();
+	for ($i=0; $i <= ( $clength-1); $i++) {
+		$jmlmpb[$i] = 0;
+		$jmlmnk[$i] = 0;
+	}
+
+    for ($x=0; $x <= ($clength-1) ; $x++) {
+		for ($y=0; $y <= ($clength-1) ; $y++) {
+			$value		= $matrik[$x][$y];
+			$jmlmpb[$y] += $value;
+		}
+	}
+
+    
+    for ($x=0; $x <= ( $clength-1) ; $x++) {
+		for ($y=0; $y <= ( $clength-1) ; $y++) {
+			$matrikb[$x][$y] = $matrik[$x][$y] / $jmlmpb[$y];
+			$value	= $matrikb[$x][$y];
+			$jmlmnk[$x] += $value;
+		}
+
+		// nilai priority vektor
+		$pv[$x]	 = $jmlmnk[$x] /  $clength;
+
+		// memasukkan nilai priority vektor ke dalam tabel pv_kriteria dan pv_alternatif
+		$id_kriteria = $this->getKriteriaID($x);
+		$this->inputKriteriaPV($id_kriteria,$pv[$x]);
+
+	}
+
+    $eigenvektor = $this->getEigenVector($jmlmpb,$jmlmnk, $clength);
+	$consIndex   = $this->getConsIndex($jmlmpb,$jmlmnk, $clength);
+	$consRatio   = $this->getConsRatio($jmlmpb,$jmlmnk, $clength);
+
+
         return view('calculate.index', [
             'title' => 'Calculate',
             'active' => 'calculate',
-            'matrik' => $matrik
+            'matrik' => $matrik,
+            'criterias' =>$criterias
         ]);
+    }
+    
+    function getEigenVector($matrik_a,$matrik_b, $clength) {
+        $eigenvektor = 0;
+        for ($i=0; $i <= ( $clength-1) ; $i++) {
+            $eigenvektor += ($matrik_a[$i] * (($matrik_b[$i]) /  $clength));
+        }
+    
+        return $eigenvektor;
+    }
+    
+    // mencari Cons Index
+    function getConsIndex($matrik_a,$matrik_b, $clength) {
+        $eigenvektor = $this->getEigenVector($matrik_a,$matrik_b, $clength);
+        $consindex = ($eigenvektor -  $clength)/( $clength-1);
+    
+        return $consindex;
+    }
+    
+    // Mencari Consistency Ratio
+    function getConsRatio($matrik_a,$matrik_b, $clength) {
+        $consindex = $this->getConsIndex($matrik_a,$matrik_b, $clength);
+        $consratio = $consindex / getNilaiIR( $clength);
+        // ambil nilai IR konstanta di DB
+        
+        return $consratio;
     }
 
     public function criteriaComparisons()

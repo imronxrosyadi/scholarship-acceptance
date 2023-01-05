@@ -15,18 +15,21 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover" width="100%" cellspacing="0">
-                        <thead class="bg-gradient-primary">
-                        @for($x = 0; $x <= count($matrik); $x++)
-                                
-                            <tr class="text-white">
-                            
-                                <td>{{ $matrik[$x][$x]; }}</td>
-                            </tr>
+                         <thead>
+                         <tr>
+                         @for($x = 0; $x <= count($matrik)-1; $x++)
+                         
+                            <th>{{ $criterias[$x]->name }}<th>
+                           
+                         @endfor
+                         </tr>
+                        @for($x = 0; $x <= count($matrik)-1; $x++)
+                      
                         </thead>
                         <tbody>
-                        @for($y = ($x+1); $y <= count($matrik)-1; $y++)
+                        @for($y = 0; $y <= count($matrik)-1; $y++)
                             <tr class="table-row">
-                                <td>{{ $matrik[$y][$x]; }}</td>
+                                <td>{{ $matrik[$x][$y]; }}</td>
                             </tr>
                             @endfor
                             

@@ -22,6 +22,7 @@
                                     <th>First Alternative</th>
                                     <th>Value Weight</th>
                                     <th>Second Alternative</th>
+                                    <th>count($alternatives)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,6 +47,7 @@
                                     @for ($x = 0; $x <= (count($alternatives)-2); $x++) 
                                         @for ($y=($x+1); $y <=(count($alternatives)-1); $y++) 
                                             <tr>
+                                            <!-- <h6 class="m-0 font-weight-bold text-primary">Alternative Comparison - {{ $selectedCriteria->name }}</h6> -->
                                                 <input type="text" name="type" value="create" hidden>
                                                 <td><input type="text" name="firstAlternatives[]" value="{{ $alternatives[$x]->id }}" hidden>{{ $alternatives[$x]->name }}</td>
                                                 <td>
