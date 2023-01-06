@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alternative;
+use App\Models\AlternativeComparison;
 use App\Models\Criteria;
 use App\Models\CriteriaComparison;
 use App\Models\IndeksRandomConsistency;
 use App\Models\PriorityVectorAlternative;
 use App\Models\PriorityVectorCriteria;
+use App\Models\Rank;
 use Illuminate\Http\Request;
 
 class CalculateController extends Controller
@@ -25,172 +27,354 @@ class CalculateController extends Controller
             'secondCriterias'
         ])->get();
 
+        $alternativeComparisons = AlternativeComparison::with([
+            'firstAlternatives',
+            'valueWeights',
+            'secondAlternatives',
+            'criterias'
+        ])->get();
+
         // @dd($criteriaComparisons);
         $criterias = Criteria::all();
-
-        $matrik = array();
-        $urut = 0;
-        $clength= count($criterias);
-        for($x=0; $x <=  $clength-2; $x++) {
-            for($y=($x+1); $y <=  $clength-1; $y++) {
-                $matrik[$x][$y] = $criteriaComparisons[$urut]->valueWeights[0]->value;
-                $matrik[$y][$x] = 1/$criteriaComparisons[$urut]->valueWeights[0]->value;
+        $alternatives = Alternative::all();
+        $distinctAlternativeCompare = AlternativeComparison::distinct()->get(["criteria_id"]);
+        $calculateCriteria =[];
+       
+        if(count($criteriaComparisons) > 0){
+            $calculateCriteria = $this->calculateCriteria($criterias, $criteriaComparisons);
+        }
+       
+        $calculateAlternatives = [];
+        if (count($alternativeComparisons) > 0) {
+            $urut = 0;
+            // @dd(count($distinctAlternativeCompare));
+            for($i=0; $i < count($distinctAlternativeCompare); $i++) {
+                $calculateAlternative = $this->calculateAlternative($alternatives, $alternativeComparisons, $urut);
+                // @dd($calculateAlternative);
+                array_push($calculateAlternatives, $calculateAlternative);
                 $urut++;
             }
         }
 
-        for($i = 0; $i <= count($matrik)-1; $i++) {
-            $matrik[$i][$i] = 1;
+        $distinctPvAlternative = count(PriorityVectorAlternative::distinct()->get(["alternative_id"]));
+        $distinctPvCriteria = count(PriorityVectorCriteria::distinct()->get(["criteria_id"]));
+
+        $rank=[];
+        if((count($alternatives)==$distinctPvAlternative) &&(count($criterias)==$distinctPvCriteria)){
+            $rank = $this->calulateResult(count($criterias),count($alternatives));
+            @dump($rank[0]->alternative_id);
+        } else {
+            echo "Please Complete Form";
         }
 
-        for ($x=0; $x <= ($clength-1); $x++) { 
-            for ($y=0; $y <= ( $clength-1); $y++) { 
-                // echo ($matrik[$x][$y])."-";
-            }
-        }
-
-
-
-
-        $jmlKriteria 	= Criteria::all()->count();
-        $jmlAlternatif	= Alternative::all()->count();
-        $nilai			= array();
-
-        // echo "al".$jmlAlternatif;
-        // echo "al".$jmlKriteria;
-
-        $alternative= Alternative::all();
-
-        for ($x=0; $x <= ($jmlAlternatif-1); $x++) {
-            // inisialisasi
-            $nilai[$x] = 0;
-            for ($y=0; $y <= ($jmlKriteria-1); $y++) {
-                $id_alternatif 	= $alternative[$x]->id;
-                $id_kriteria	= $criterias[$y]->id;
-
-                // $pv_alternatif	= getAlternatifPV($id_alternatif,$id_kriteria);
-                // @dd($id_alternatif);
-                // @dd($id_kriteria);
-                $pv_alternatif  = PriorityVectorAlternative::select('value')->where('alternative_id',$id_alternatif)->where('criteria_id', $id_kriteria)->first();
-                $pv_kriteria	= PriorityVectorCriteria::select('value')->where('criteria_id', $id_kriteria)->first();
-                echo $id_kriteria."-";
-                // @dump($pv_kriteria['value']);
-                                
-                // $nilai[$x]	 	+= ( $pv_alternatif['value'] * $pv_kriteria['value']);
-            }
-        }
-
-
-        // for($x=0; $x <= count($nilai)-1; $x++){
-        //     echo $nilai[$x]."--";
-        // }
-
-
-
-        //matrik sudah sesuai
-
-        $jmlmpb = array();
-	    $jmlmnk = array();
-	// for ($i=0; $i <= ( $clength-1); $i++) {
-	// 	$jmlmpb[$i] = 0;
-	// 	$jmlmnk[$i] = 0;
-	// }
-
-    // for ($x=0; $x <= ($clength-1) ; $x++) {
-	// 	for ($y=0; $y <= ($clength-1) ; $y++) {
-	// 		$value		= $matrik[$x][$y];
-	// 		$jmlmpb[$y] += $value;
-	// 	}
-	// }
-
-    
-    // for ($x=0; $x <= ( $clength-1) ; $x++) {
-	// 	for ($y=0; $y <= ( $clength-1) ; $y++) {
-	// 		$matrikb[$x][$y] = $matrik[$x][$y] / $jmlmpb[$y];
-	// 		$value	= $matrikb[$x][$y];
-	// 		$jmlmnk[$x] += $value;
-	// 	}
-
-	// 	// nilai priority vektor
-	// 	$pv[$x]	 = $jmlmnk[$x] /  $clength;
-
-	// 	// memasukkan nilai priority vektor ke dalam tabel pv_kriteria dan pv_alternatif
-	// 	$id_kriteria = Criteria::select('id')->first();
-	// 	$this->inputKriteriaPV($id_kriteria,$pv[$x]);
-
-	// }
-
-
-    // $eigenvektor = $this->getEigenVector($jmlmpb,$jmlmnk, $clength);
-	// $consIndex   = $this->getConsIndex($jmlmpb,$jmlmnk, $clength);
-	// $consRatio   = $this->getConsRatio($jmlmpb,$jmlmnk, $clength);
-
+        // echo $rank;
 
         return view('calculate.index', [
             'title' => 'Calculate',
             'active' => 'calculate',
-            'matrik' => $matrik,
-            'criterias' =>$criterias
+            'criterias' => $criterias,
+            'alternatives' => $alternatives,
+            'calculateCriteria' => $calculateCriteria,
+            'calculateAlternatives' => $calculateAlternatives,
+            'rank'=> $rank
         ]);
+
+
     }
 
-    function inputKriteriaPV ($id_kriteria,$pv) {
-        include ('config.php');
-    
-        $query = "SELECT * FROM pv_kriteria WHERE id_kriteria=$id_kriteria";
-        $result = mysqli_query($koneksi, $query);
-
-        $criteria = Criteria::select('id')->where('id',$id_kriteria)->first();
-
-    
-        if ($criteria) {
-            echo "Error !!!";
-            exit();
-        } else {
-
+    function calulateResult($jmlKriteria,$jmlAlternatif){
+        $nilai = array();
+        for ($x=0; $x <= ($jmlAlternatif-1); $x++) {
+            // inisialisasi
+            $nilai[$x] = 0;
+        
+            for ($y=0; $y <= ($jmlKriteria-1); $y++) {
+                $id_alternatif 	= $this->getAlternatifID($x);
+                $id_kriteria	= $this->getKriteriaID($y);
+                $pv_alternatif	= $this->getAlternatifPV($id_alternatif->id,$id_kriteria->id);
+                $pv_kriteria	= $this->getKriteriaPV($id_kriteria->id);
+                $nilai[$x]	 	+= ($pv_alternatif * $pv_kriteria);
+            }
         }
-    
-        // jika result kosong maka masukkan data baru
-        // jika telah ada maka diupdate
-        if (mysqli_num_rows($result)==0) {
-            $query = "INSERT INTO pv_kriteria (id_kriteria, nilai) VALUES ($id_kriteria, $pv)";
-        } else {
-            $query = "UPDATE pv_kriteria SET nilai=$pv WHERE id_kriteria=$id_kriteria";
+        // update nilai ranking
+        for ($i=0; $i <= ($jmlAlternatif-1); $i++) { 
+            $id_alternatif = $this->getAlternatifID($i);
+            $this->inputRangking($id_alternatif,$nilai[$i]);
         }
-    
-    
-        $result = mysqli_query($koneksi, $query);
-        if(!$result) {
-            echo "Gagal memasukkan / update nilai priority vector kriteria";
-            exit();
-        }
-    
+
+        return Rank::orderBy('value', 'DESC')->get();
     }
+    function inputRangking($id_alternatif,$nilai){
+        $rank = Rank::where('alternative_id', $id_alternatif['id'])->first();
+        if ($rank) {
+            $rank->value = $nilai;
+            $rank->update();
+        } else {
+            $rank = new Rank();
+            $rank->alternative_id = $id_alternatif['id'];
+            $rank->value = $nilai;
+            $rank->save();
+        }
+    }
+
+    function calculateAlternative($n, $alternativeComparisons, $criteriaId)
+    {
+            $matrik = array();
+            $urut = 0;
+            $clength = count($n);
+            for ($x = 0; $x <=  $clength - 2; $x++) {
+                for ($y = ($x + 1); $y <=  $clength - 1; $y++) {
+                    $matrik[$x][$y] = $alternativeComparisons[$urut]->valueWeights['value'];
+                    $matrik[$y][$x] = 1 / $alternativeComparisons[$urut]->valueWeights['value'];
+                    $urut++;
+                }
+            }
     
-    function getEigenVector($matrik_a,$matrik_b, $clength) {
+            // diagonal maka bernilai sama berat atau 1
+            for ($i = 0; $i <= count($matrik) - 1; $i++) {
+                $matrik[$i][$i] = 1;
+            }
+    
+            // print jadul
+            // for ($x = 0; $x <= ($clength - 1); $x++) {
+            //     for ($y = 0; $y <= ($clength - 1); $y++) {
+            //         echo ($matrik[$x][$y]) . "-";
+            //     }
+            // }
+    
+            //matrik perbandingan kriteria sudah sesuai
+            // @dd($matrik);
+    
+            // inisialisasi jumlah tiap kolom dan baris kriteria
+            $jmlmpb = array();
+            $jmlmnk = array();
+            for ($i = 0; $i <= ($clength - 1); $i++) {
+                $jmlmpb[$i] = 0;
+                $jmlmnk[$i] = 0;
+            }
+    
+            // menghitung jumlah pada kolom kriteria tabel perbandingan berpasangan
+            for ($x = 0; $x <= ($clength - 1); $x++) {
+                for ($y = 0; $y <= ($clength - 1); $y++) {
+                    $value        = $matrik[$x][$y];
+                    $jmlmpb[$y] += $value;
+                }
+            }
+    
+    
+            // menghitung jumlah pada baris kriteria tabel nilai kriteria
+            // matrikb merupakan matrik yang telah dinormalisasi
+            for ($x = 0; $x <= ($clength - 1); $x++) {
+                for ($y = 0; $y <= ($clength - 1); $y++) {
+                    $matrikb[$x][$y] = $matrik[$x][$y] / $jmlmpb[$y];
+                    $value    = $matrikb[$x][$y];
+                    $jmlmnk[$x] += $value;
+                }
+    
+                // nilai priority vektor
+                $pv[$x]     = $jmlmnk[$x] /  $clength;
+    
+                // memasukkan nilai priority vektor ke dalam tabel pv_kriteria dan pv_alternatif
+                $id_kriteria	= $this->getKriteriaID($criteriaId);
+                $id_alternatif	= $this->getAlternatifID($x);
+                $this->inputAlternatifPV($id_alternatif,$id_kriteria,$pv[$x]);
+            }
+    
+            $eigenvektor = $this->getEigenVector($jmlmpb, $jmlmnk, $clength);
+            $consIndex   = $this->getConsIndex($jmlmpb, $jmlmnk, $clength);
+            $consRatio   = $this->getConsRatio($jmlmpb, $jmlmnk, $clength);
+            
+            // array_push($calculateAlternatives, $calculateAlternative);   <- taro di luar
+
+        return $calculateAlternative[] = [
+            'criteriaId' => $criteriaId,
+            'matrik' => $matrik,
+            'jmlmpb' => $jmlmpb,
+            'matrikb' => $matrikb,
+            'jmlmnk' => $jmlmnk,
+            'pv' => $pv,
+            'eigenvektor' => $eigenvektor,
+            'consIndex' => $consIndex,
+            'consRatio' => $consRatio
+        ];;
+    }
+
+    // mencari priority vector alternatif
+    function getAlternatifPV($id_alternatif,$id_kriteria) {
+    $pvAlternative = PriorityVectorAlternative::where('alternative_id', $id_alternatif)->where('criteria_id', $id_kriteria)->first();
+	return  $pvAlternative['value'];
+    }
+
+     // mencari priority vector criteria
+     function getKriteriaPV($id_kriteria) {
+
+        $pvCriteria = $pvCriteria = PriorityVectorCriteria::where('criteria_id', $id_kriteria)->first();
+    
+        return $pvCriteria['value'];
+    }
+
+
+
+
+    function calculateCriteria($n, $criteriaComparisons)
+    {
+        $matrik = array();
+        $urut = 0;
+        $clength = count($n);
+        for ($x = 0; $x <=  $clength - 2; $x++) {
+            for ($y = ($x + 1); $y <=  $clength - 1; $y++) {
+                $matrik[$x][$y] = $criteriaComparisons[$urut]->valueWeights[0]->value;
+                $matrik[$y][$x] = 1 / $criteriaComparisons[$urut]->valueWeights[0]->value;
+                $urut++;
+            }
+        }
+
+        // diagonal maka bernilai sama berat atau 1
+        for ($i = 0; $i <= count($matrik) - 1; $i++) {
+            $matrik[$i][$i] = 1;
+        }
+
+        // print jadul
+        // for ($x = 0; $x <= ($clength - 1); $x++) {
+        //     for ($y = 0; $y <= ($clength - 1); $y++) {
+        //         echo ($matrik[$x][$y]) . "-";
+        //     }
+        // }
+
+        //matrik perbandingan kriteria sudah sesuai
+        // @dd($matrik);
+
+        // inisialisasi jumlah tiap kolom dan baris kriteria
+        $jmlmpb = array();
+        $jmlmnk = array();
+        for ($i = 0; $i <= ($clength - 1); $i++) {
+            $jmlmpb[$i] = 0;
+            $jmlmnk[$i] = 0;
+        }
+
+        // menghitung jumlah pada kolom kriteria tabel perbandingan berpasangan
+        for ($x = 0; $x <= ($clength - 1); $x++) {
+            for ($y = 0; $y <= ($clength - 1); $y++) {
+                $value        = $matrik[$x][$y];
+                $jmlmpb[$y] += $value;
+            }
+        }
+
+
+        // menghitung jumlah pada baris kriteria tabel nilai kriteria
+        // matrikb merupakan matrik yang telah dinormalisasi
+        for ($x = 0; $x <= ($clength - 1); $x++) {
+            for ($y = 0; $y <= ($clength - 1); $y++) {
+                $matrikb[$x][$y] = $matrik[$x][$y] / $jmlmpb[$y];
+                $value    = $matrikb[$x][$y];
+                $jmlmnk[$x] += $value;
+            }
+
+            // nilai priority vektor
+            $pv[$x]     = $jmlmnk[$x] /  $clength;
+
+            // memasukkan nilai priority vektor ke dalam tabel pv_kriteria dan pv_alternatif
+            $id_kriteria = $this->getKriteriaID($x);
+            $this->inputKriteriaPV($id_kriteria, $pv[$x]);
+        }
+
+        $eigenvektor = $this->getEigenVector($jmlmpb, $jmlmnk, $clength);
+        $consIndex   = $this->getConsIndex($jmlmpb, $jmlmnk, $clength);
+        $consRatio   = $this->getConsRatio($jmlmpb, $jmlmnk, $clength);
+
+        
+        return $calculateCriteria[] = [
+            'matrik' => $matrik,
+            'jmlmpb' => $jmlmpb,
+            'matrikb' => $matrikb,
+            'jmlmnk' => $jmlmnk,
+            'pv' => $pv,
+            'eigenvektor' => $eigenvektor,
+            'consIndex' => $consIndex,
+            'consRatio' => $consRatio
+        ];
+    }
+
+    // memasukkan nilai priority vektor alternatif
+    function inputAlternatifPV($id_alternatif, $id_kriteria, $pv)
+    {
+
+        $pvAlternative = PriorityVectorAlternative::where('alternative_id', $id_alternatif['id'])->where('criteria_id', $id_kriteria['id'])->first();
+        if ($pvAlternative) {
+            $pvAlternative->value = $pv;
+            $pvAlternative->update();
+        } else {
+            $pvAlternative = new PriorityVectorAlternative();
+            $pvAlternative->alternative_id = $id_alternatif['id'];
+            $pvAlternative->criteria_id = $id_kriteria['id'];
+            $pvAlternative->value = $pv;
+            $pvAlternative->save();
+        }
+    }
+
+    // memasukkan nilai priority vektor kriteria
+    function inputKriteriaPV($id_kriteria, $pv)
+    {
+        $pvCriteria = PriorityVectorCriteria::where('criteria_id', $id_kriteria['id'])->first();
+        if ($pvCriteria) {
+            $pvCriteria->criteria_id = $id_kriteria['id'];
+            $pvCriteria->value = $pv;
+            $pvCriteria->update();
+        } else {
+            $pvCriteria = new PriorityVectorCriteria();
+            $pvCriteria->criteria_id = $id_kriteria['id'];
+            $pvCriteria->value = $pv;
+            $pvCriteria->save();
+        }
+    }
+
+    function getAlternatifID($no_urut)
+    {
+        $alternativesId = Alternative::select('id')->orderBy('id', 'ASC')->get();
+        foreach ($alternativesId as $id) {
+            $listID[] = $id;
+        }
+
+        return $listID[($no_urut)];
+    }
+
+    function getKriteriaID($no_urut)
+    {
+        $criteriasId = Criteria::select('id')->orderBy('id', 'ASC')->get();
+        // $criteriaId = Criteria::select('id')->where('id', $no_urut)->first();
+        foreach ($criteriasId as $id) {
+            $listID[] = $id;
+        }
+
+        return $listID[($no_urut)];
+    }
+
+    function getEigenVector($matrik_a, $matrik_b, $clength)
+    {
         $eigenvektor = 0;
-        for ($i=0; $i <= ( $clength-1) ; $i++) {
+        for ($i = 0; $i <= ($clength - 1); $i++) {
             $eigenvektor += ($matrik_a[$i] * (($matrik_b[$i]) /  $clength));
         }
-    
+
         return $eigenvektor;
     }
-    
+
     // mencari Cons Index
-    function getConsIndex($matrik_a,$matrik_b, $clength) {
-        $eigenvektor = $this->getEigenVector($matrik_a,$matrik_b, $clength);
-        $consindex = ($eigenvektor -  $clength)/( $clength-1);
-    
+    function getConsIndex($matrik_a, $matrik_b, $clength)
+    {
+        $eigenvektor = $this->getEigenVector($matrik_a, $matrik_b, $clength);
+        $consindex = ($eigenvektor -  $clength) / ($clength - 1);
+
         return $consindex;
     }
-    
+
     // Mencari Consistency Ratio
-    function getConsRatio($matrik_a,$matrik_b, $clength) {
-        @dd($clength."length");
+    function getConsRatio($matrik_a, $matrik_b, $clength)
+    {
         $indeksRandomConsistency = IndeksRandomConsistency::select('value')->where('amount', $clength)->first();
 
-        $consindex = $this->getConsIndex($matrik_a,$matrik_b, $clength);
-        $consratio = $consindex / $indeksRandomConsistency;
+        $consindex = $this->getConsIndex($matrik_a, $matrik_b, $clength);
+        $consratio = $consindex / $indeksRandomConsistency->value;
         // ambil nilai IR konstanta di DB
         return $consratio;
     }
