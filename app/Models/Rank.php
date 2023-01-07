@@ -9,8 +9,8 @@ class Rank extends Model
 {
     use HasFactory;
 
-    public function alternatives()
+    public function alternative()
     {
-        return $this->belongsTo(Alternative::class);
+        return $this->belongsTo(Alternative::class, 'alternative_id', 'id');
     }
 }

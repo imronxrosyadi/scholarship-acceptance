@@ -64,15 +64,20 @@ class CriteriaComparisonController extends Controller
      */
     public function store(StoreCriteriaComparisonRequest $request)
     {
-        //
-        // @dd($request);
-
         if ($request->type == 'create') {
             $size = count($request->firstCriteria);
             for($i = 0; $i < $size; $i++) {
+                $choosen = 'choosen'.($i+1);
+                $choosen = $request->$choosen;
                 $criteriaComparison = new CriteriaComparison();
                 $criteriaComparison->first_criteria_id = $request->firstCriteria[$i];
                 $criteriaComparison->value_weight_id = $request->valueWeight[$i];
+                $criteriaComparison->choosen = $choosen;
+                if ($choosen == 1) {
+                    $criteriaComparison->value = $request->valueWeight[$i];
+                } else {
+                    $criteriaComparison->value = 1/$request->valueWeight[$i];
+                }
                 $criteriaComparison->second_criteria_id = $request->secondCriteria[$i];
                 $criteriaComparison->save();
             }
@@ -80,12 +85,20 @@ class CriteriaComparisonController extends Controller
             // @dd($request);
             $size = count($request->firstCriteria);
             for($i = 0; $i < $size; $i++) {
+                $choosen = 'choosen'.($i+1);
+                $choosen = $request->$choosen;
                 // @dump($request->id);
                 $criteriaComparison = CriteriaComparison::where('id', $request->id[$i])->first();
                 // @dump($criteriaComparison);
                 // @dd($request->firstCriteria[$i]);
                 $criteriaComparison->first_criteria_id = $request->firstCriteria[$i];
                 $criteriaComparison->value_weight_id = $request->valueWeight[$i];
+                $criteriaComparison->choosen = $choosen;
+                if ($choosen == 1) {
+                    $criteriaComparison->value = $request->valueWeight[$i];
+                } else {
+                    $criteriaComparison->value = 1/$request->valueWeight[$i];
+                }
                 $criteriaComparison->second_criteria_id = $request->secondCriteria[$i];
                 // @dump($criteriaComparison);
                 $criteriaComparison->update();

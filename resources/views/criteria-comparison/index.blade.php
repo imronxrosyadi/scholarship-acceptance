@@ -15,23 +15,34 @@
             <div class="card-body">
                 <table class="table table-bordered" id="table" width="100%" cellspacing="0">
                     <thead class="bg-gradient-primary text-light">
+                        <tr> 
+                            <th colspan="3" class="text-center">Select what is more important</th> 
+                        </tr>
                         <tr>
-                            <!-- <th>No</th> -->
                             <th>First Criteria</th>
                             <th>Value Weight</th>
                             <th>Second Criteria</th>
                         </tr>
                     </thead>
-                    
+
                     <form action="{{ route('criteria-comparison.store') }}" method="POST">
                         @csrf
-                    <tbody>
-                        @if (count($criteriaComparisons) > 0)
+                        <tbody>
+                            @php $urut=0; @endphp
+                            @if (count($criteriaComparisons) > 0)
                             @foreach($criteriaComparisons as $criteriaComparison)
                             <tr>
                                 <input type="text" name="type" value="update" hidden>
                                 <input type="text" name="id[]" value="{{ $criteriaComparison->id }}" hidden>
-                                <td><input type="text" name="firstCriteria[]" value="{{ $criteriaComparison->firstCriterias[0]->id }}" hidden>{{ $criteriaComparison->firstCriterias[0]->name }}</td>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="choosen{{$loop->iteration}}" value="1" class="hidden" {{ $criteriaComparison->choosen == 1 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="option1">
+                                            <input type="text" name="firstCriteria[]" value="{{ $criteriaComparison->firstCriterias[0]->id }}" hidden>{{ $criteriaComparison->firstCriterias[0]->name }}
+                                        </label>
+                                    </div>
+                                </td>
+                                <!-- <td><input type="text" name="firstCriteria[]" value="{{ $criteriaComparison->firstCriterias[0]->id }}" hidden>{{ $criteriaComparison->firstCriterias[0]->name }}</td> -->
                                 <td>
                                     <select class="form-select" name="valueWeight[]">
                                         <option value="{{ $criteriaComparison->valueWeights[0]->id }}" selected>{{ ('(' . ($criteriaComparison->valueWeights[0]->value) . ') ' . ($criteriaComparison->valueWeights[0]->description)) ?? 'Select value weight'  }}</option>
@@ -42,30 +53,53 @@
                                         @endforeach
                                     </select>
                                 </td>
-                                <td><input type="text" name="secondCriteria[]" value="{{ $criteriaComparison->secondCriterias[0]->id }}" hidden>{{ $criteriaComparison->secondCriterias[0]->name }}</td>
+                                <!-- <td><input type="text" name="secondCriteria[]" value="{{ $criteriaComparison->secondCriterias[0]->id }}" hidden>{{ $criteriaComparison->secondCriterias[0]->name }}</td> -->
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="choosen{{$loop->iteration}}" value="2" class="hidden" {{ $criteriaComparison->choosen == 2 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="option1">
+                                            <input type="text" name="secondCriteria[]" value="{{ $criteriaComparison->secondCriterias[0]->id }}" hidden>{{ $criteriaComparison->secondCriterias[0]->name }}
+                                        </label>
+                                    </div>
+                                </td>
                             </tr>
                             @endforeach
-                        @else
-                            @for ($x = 0; $x <= (count($criterias)-2); $x++)
-                                @for ($y = ($x+1); $y <= (count($criterias)-1); $y++)
-                                    <tr>
-                                        <input type="text" name="type" value="create" hidden>
-                                        <td><input type="text" name="firstCriteria[]" value="{{ $criterias[$x]->id }}" hidden>{{ $criterias[$x]->name }}</td>
-                                        <td>
-                                        <select class="form-select" name="valueWeight[]">
-                                            <option selected>Select value weight</option>
-                                            @foreach($valueWeights as $valueWeight)
-                                                <option value="{{ $valueWeight->id }}">{{ '(' . ($valueWeight->value) . ') ' . ($valueWeight->description) }}</option>
-                                            @endforeach
-                                        </select>
-                                        </td>
-                                        <td><input type="text" name="secondCriteria[]" value="{{ $criterias[$y]->id }}" hidden>{{ $criterias[$y]->name }}</td>
-                                    </tr>
-                                    
+                            @else
+                            @for ($x = 0; $x <= (count($criterias)-2); $x++) 
+                            @for ($y=($x+1); $y <=(count($criterias)-1); $y++) 
+                            <tr>
+                                @php $urut++; @endphp
+                                <input type="text" name="type" value="create" hidden>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="choosen{{$urut}}" value="1" checked="" class="hidden">
+                                        <label class="form-check-label" for="option1">
+                                            <input type="text" name="firstCriteria[]" value="{{ $criterias[$x]->id }}" hidden>{{ $criterias[$x]->name }}
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <select class="form-select" name="valueWeight[]">
+                                        <option selected>Select value weight</option>
+                                        @foreach($valueWeights as $valueWeight)
+                                        <option value="{{ $valueWeight->id }}">{{ '(' . ($valueWeight->value) . ') ' . ($valueWeight->description) }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="choosen{{$urut}}" value="2" class="hidden">
+                                        <label class="form-check-label" for="option1">
+                                            <input type="text" name="secondCriteria[]" value="{{ $criterias[$y]->id }}" hidden>{{ $criterias[$y]->name }}
+                                        </label>
+                                    </div>
+                                </td>
+                                </tr>
+
                                 @endfor
-                            @endfor
-                        @endif
-                    </tbody>
+                                @endfor
+                                @endif
+                        </tbody>
                 </table>
             </div>
             <div class="card-footer">

@@ -56,18 +56,41 @@ class CalculateController extends Controller
             }
         }
 
+        $resultCriteriaPv = array();
+        $resultAlternativePv = array();
+        for($i=0; $i <= count($criterias)-1; $i++) {
+            $resCritPv = $this->resultCriteria($i);
+            array_push($resultCriteriaPv, $resCritPv);
+            for($j=0; $j <= count($alternatives)-1; $j++) {
+                $resAltPv = $this->resultAlternative($i, $j);
+                array_push($resultAlternativePv, $resAltPv);
+            }
+        }
+
+        
+        $valueResult = array();
+        for($i=0; $i <= count($alternatives)-1; $i++) {
+            $valueResult[$i] = 0;
+            for($j=0; $j <= count($criterias)-1; $j++) {
+                $resAltPv = $this->resultAlternative($j, $i);
+                $resCritPv = $this->resultCriteria($j);
+                $valueResult[$i] += ($resAltPv * $resCritPv);
+            }
+        }
+
+        // @dd($resultCriteriaPv, $resultAlternativePv);
+
+
         $distinctPvAlternative = count(PriorityVectorAlternative::distinct()->get(["alternative_id"]));
         $distinctPvCriteria = count(PriorityVectorCriteria::distinct()->get(["criteria_id"]));
 
         $rank=[];
         if((count($alternatives)==$distinctPvAlternative) &&(count($criterias)==$distinctPvCriteria)){
             $rank = $this->calulateResult(count($criterias),count($alternatives));
-            @dump($rank[0]->alternative_id);
+            // @dump($rank[0]->alternative_id);
         } else {
             echo "Please Complete Form";
         }
-
-        // echo $rank;
 
         return view('calculate.index', [
             'title' => 'Calculate',
@@ -76,10 +99,23 @@ class CalculateController extends Controller
             'alternatives' => $alternatives,
             'calculateCriteria' => $calculateCriteria,
             'calculateAlternatives' => $calculateAlternatives,
+            'resultCriteriaPv' => $resultCriteriaPv,
+            'resultAlternativePv' => $resultAlternativePv,
+            'valueResult' => $valueResult,
             'rank'=> $rank
         ]);
 
 
+    }
+
+    function resultAlternative($x, $y) 
+    {
+        return round($this->getAlternatifPV($this->getAlternatifID($y)->id, $this->getKriteriaID($x)->id), 5);
+    }
+
+    function resultCriteria($urut) 
+    {
+        return round($this->getKriteriaPV($this->getKriteriaID($urut)->id),5);
     }
 
     function calulateResult($jmlKriteria,$jmlAlternatif){
@@ -102,7 +138,7 @@ class CalculateController extends Controller
             $this->inputRangking($id_alternatif,$nilai[$i]);
         }
 
-        return Rank::orderBy('value', 'DESC')->get();
+        return Rank::with('alternative')->orderBy('value', 'DESC')->get();
     }
     function inputRangking($id_alternatif,$nilai){
         $rank = Rank::where('alternative_id', $id_alternatif['id'])->first();
@@ -124,8 +160,8 @@ class CalculateController extends Controller
             $clength = count($n);
             for ($x = 0; $x <=  $clength - 2; $x++) {
                 for ($y = ($x + 1); $y <=  $clength - 1; $y++) {
-                    $matrik[$x][$y] = $alternativeComparisons[$urut]->valueWeights['value'];
-                    $matrik[$y][$x] = 1 / $alternativeComparisons[$urut]->valueWeights['value'];
+                    $matrik[$x][$y] = $alternativeComparisons[$urut]->value;
+                    $matrik[$y][$x] = 1 / $alternativeComparisons[$urut]->value;
                     $urut++;
                 }
             }
@@ -201,8 +237,8 @@ class CalculateController extends Controller
 
     // mencari priority vector alternatif
     function getAlternatifPV($id_alternatif,$id_kriteria) {
-    $pvAlternative = PriorityVectorAlternative::where('alternative_id', $id_alternatif)->where('criteria_id', $id_kriteria)->first();
-	return  $pvAlternative['value'];
+        $pvAlternative = PriorityVectorAlternative::where('alternative_id', $id_alternatif)->where('criteria_id', $id_kriteria)->first();
+        return  $pvAlternative['value'] ?? 0;
     }
 
      // mencari priority vector criteria
@@ -223,8 +259,8 @@ class CalculateController extends Controller
         $clength = count($n);
         for ($x = 0; $x <=  $clength - 2; $x++) {
             for ($y = ($x + 1); $y <=  $clength - 1; $y++) {
-                $matrik[$x][$y] = $criteriaComparisons[$urut]->valueWeights[0]->value;
-                $matrik[$y][$x] = 1 / $criteriaComparisons[$urut]->valueWeights[0]->value;
+                $matrik[$x][$y] = $criteriaComparisons[$urut]->value;
+                $matrik[$y][$x] = 1 / $criteriaComparisons[$urut]->value;
                 $urut++;
             }
         }

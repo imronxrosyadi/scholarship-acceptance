@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Alternative;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,7 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ValueWeightSeeder::class,
-            IndeksRandomConsistencySeeder::class
+            IndeksRandomConsistencySeeder::class,
+            AlternativeSeeder::class,
+            CriteriaSeeder::class
         ]);
         // User::factory(3)->create();
 

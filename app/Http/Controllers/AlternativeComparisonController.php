@@ -63,28 +63,38 @@ class AlternativeComparisonController extends Controller
         if ($request->type == 'create') {
             $size = count($request->firstAlternatives);
             for($i = 0; $i <= $size-1; $i++) {
+                $choosen = 'choosen'.($i+1);
+                $choosen = $request->$choosen;
                 $alternativeComparison = new AlternativeComparison();
                 $alternativeComparison->first_alternative_id = $request->firstAlternatives[$i];
                 $alternativeComparison->value_weight_id = $request->valueWeights[$i];
+                $alternativeComparison->choosen = $choosen;
+                if ($choosen == 1) {
+                    $alternativeComparison->value = $request->valueWeights[$i];
+                } else {
+                    $alternativeComparison->value = 1/$request->valueWeights[$i];
+                }
                 $alternativeComparison->second_alternative_id = $request->secondAlternatives[$i];
                 $alternativeComparison->criteria_id = $request->criteria;
                 $alternativeComparison->save();
             }
         } else {
-            // @dd($request);
             $size = count($request->firstAlternatives);
             for($i = 0; $i <= $size-1; $i++) {
-                // @dump($request->id);
+                $choosen = 'choosen'.($i+1);
+                $choosen = $request->$choosen;
                 $alternativeComparison = AlternativeComparison::where('id', $request->id[$i])->first();
-                // @dump($alternativeComparison);
-                // @dd($request->firstCriteria[$i]);
                 $alternativeComparison->first_alternative_id = $request->firstAlternatives[$i];
                 $alternativeComparison->value_weight_id = $request->valueWeights[$i];
+                $alternativeComparison->choosen = $choosen;
+                if ($choosen == 1) {
+                    $alternativeComparison->value = $request->valueWeights[$i];
+                } else {
+                    $alternativeComparison->value = 1/$request->valueWeights[$i];
+                }
                 $alternativeComparison->second_alternative_id = $request->secondAlternatives[$i];
                 $alternativeComparison->criteria_id = $request->criteria;
-                // @dump($alternativeComparison);
                 $alternativeComparison->update();
-                // @dump($criteriaComparison);
             }
         }
 
@@ -110,7 +120,6 @@ class AlternativeComparisonController extends Controller
 
         $alternatives = Alternative::all();
         $valueWeights = ValueWeight::all();
-        $criterias = Criteria::all();
         $selectedCriteria = Criteria::where('id', $id)->first();
 
         return view('alternative-comparison.detail', [

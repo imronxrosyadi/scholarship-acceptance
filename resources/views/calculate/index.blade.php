@@ -5,13 +5,19 @@
     <div class="col-lg-12">
         <div class="row mb-3">
             <div class="col-lg-6">
-                <h1>Calculate</h1>
+                <h3 class="m-0 font-weight-bold text-primary">Calculate - AHP (Analytical Hierarchy Process)</h3>
+            </div>
+        </div>
+        <hr>
+        <div class="row mb-3 mt-5">
+            <div class="col-lg-6">
+                <h4>Criteria</h4>
             </div>
         </div>
         @if(count($calculateCriteria)>0)
-        <div class="card shadow mb-4 mt-5">
+        <div class="card shadow mb-4 mt-3">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Criteria Comparison</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Criteria Comparison Table</h6>
             </div>
          
             <div class="card-body">
@@ -54,7 +60,7 @@
 
         <div class="card shadow mb-4 mt-5">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Matriks Nilai Kriteria</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Matrix Value Criteria</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -105,11 +111,31 @@
                 </div>
             </div>
         </div>
+
+        @if(round(($calculateCriteria['consRatio'] * 100),2) > 10)
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                <h2><i class="fas fa-exclamation-triangle mr-4"></i></h2>
+                <div class="">
+                    <h5><b>Consistency Ratio exceeds 10% !!!</b></h5>
+                    <span>Please re-submit the comparison table...</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         @endif
+        @endif
+
         <!-- below is alternative comparison calculate -->
 
+        <hr>
+        <div class="row mb-2 mt-5">
+            <div class="col-lg-6">
+                <h4>Alternative</h4>
+            </div>
+        </div>
+
+
         @for($i = 0; $i <= count($calculateAlternatives)-1; $i++)
-        <div class="card shadow mb-4 mt-5">
+        <div class="card shadow mb-4 mt-3">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Alternative Comparison - {{ $criterias[$calculateAlternatives[$i]['criteriaId']]->name }}</h6>
             </div>
@@ -118,7 +144,7 @@
                     <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                          <thead>
                             <tr>
-                                <th>Criteria</th>
+                                <th>Alternative</th>
                                 @php
                                     for ($x = 0; $x <= count($alternatives)-1; $x++) {
                                         echo "<th>".$alternatives[$x]->name."</th>";
@@ -153,14 +179,14 @@
 
         <div class="card shadow mb-4 mt-5">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Matriks Nilai Kriteria</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Matrix Value Alternative - {{ $criterias[$calculateAlternatives[$i]['criteriaId']]->name }}</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                          <thead>
                             <tr>
-                                <th>Criteria</th>
+                                <th>Alternative</th>
                                 @php
                                     for ($x = 0; $x <= count($alternatives)-1; $x++) {
                                         echo "<th>".$alternatives[$x]->name."</th>";
@@ -204,36 +230,127 @@
                 </div>
             </div>
         </div>
+
+        
+        @if(round(($calculateAlternatives[$i]['consRatio'] * 100),2) > 10)
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+                <h2><i class="fas fa-exclamation-triangle mr-4"></i></h2>
+                <div class="">
+                    <h5><b>Consistency Ratio exceeds 10% !!!</b></h5>
+                    <span>Please re-submit the comparison table...</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         @endfor
 
-        <!--RESULT CALCULATION--> <!--TO DO-->
-                        
-        <!-- RANKING SECTION -->
-        @if(count($rank) > 0)
-        <div class="card shadow mb-4 mt-5">
+        <!--RESULT CALCULATION-->
+        <hr>
+        <div class="row mb-2 mt-5">
+            <div class="col-lg-6">
+                <h4>Result</h4>
+            </div>
+        </div>
+
+        <div class="card shadow mb-4 mt-3">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Ranking</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Calculation Result</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                          <thead>
                             <tr>
-                            <th class="font-weight-bold text-primary" >Peringkat</th>
-				            <th class="font-weight-bold text-primary">Alternatif</th>
-				            <th class="font-weight-bold text-primary">Nilai</th>
+                                <th>Overall Composite Height</th>
+                                <th>Priority Vector (Average)</th>
+                                @php 
+                                    for($i=0; $i <= count($alternatives)-1; $i++) {
+                                        echo "<th>".$alternatives[$i]->name."</th>\n";
+                                    }
+                                @endphp
                             </tr>
                         </thead>
                         <tbody>
-                        @for($x = 0; $x <= count($rank)-1; $x++)
-                            <tr>
-                            <td>{{$x}}</td>
-                            <td>{{$rank[$x]->alternative_id}}</td>
-                            <td>{{$rank[$x]->value}}</td>
-                            </tr>
-                        @endfor
+                            @php 
+                                $x = 0;
+                                for($i=0; $i <= count($criterias)-1; $i++) {
+                                    echo "<tr>";
+                                    echo "<td>".$criterias[$i]->name."</td>";
+                                    echo "<td>".$resultCriteriaPv[$i]."</td>";
+                                    for ($y=0; $y <= count($alternatives)-1; $y++) {
+                                        echo "<td>".$resultAlternativePv[$x]."</td>";
+                                        $x++;
+                                    }
+                                    echo "</tr>";
+                                }
+                            @endphp
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="2">Total</th>
+                                @php 
+                                    for($i=0; $i <= count($alternatives)-1; $i++) {
+                                        echo "<th>".round($valueResult[$i],5) ."</th>";
+                                    }
+                                @endphp
+                            </tr>
+                        </tfoot>
                     </table>
+                </div>
+            </div>
+        </div>
+                     
+        
+        <!-- RANKING SECTION -->
+        <hr>
+        <div class="row mb-2 mt-5">
+            <div class="col-lg-6">
+                <h4>Ranking</h4>
+            </div>
+        </div>
+
+        @if(count($rank) > 0)
+        <div class="row-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Ranking</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                            <thead class="bg-gradient-primary">
+                                <tr class="text-white">
+                                    <th class="">Rank</th>
+                                    <th class="">Alternative</th>
+                                    <th class="">Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($rank as $r)
+                                <tr class="{{ $loop->iteration != 1 ? '' : '' }}">
+                                    <th>{{ $loop->iteration }}</th>
+                                    <th>{{$r->alternative->name}}</th>
+                                    <th>
+                                        @if ($loop->iteration == 1)
+                                            <div class="row">
+                                                <div class="col-sm-2">
+                                                    {{$r->value}}
+                                                </div>
+                                                <div class="col-sm-10 text-right">
+                                                    <h5><span class="badge bg-primary">Best!</span></h5>
+                                                </div>
+                                            </div>
+                                             
+                                        @else
+                                            {{$r->value}}
+                                        @endif    
+                                    </th>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

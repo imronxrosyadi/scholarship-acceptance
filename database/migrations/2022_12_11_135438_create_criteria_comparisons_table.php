@@ -18,6 +18,8 @@ class CreateCriteriaComparisonsTable extends Migration
             $table->foreignId('first_criteria_id')->references('id')->on('criterias');
             $table->foreignId('value_weight_id')->references('id')->on('value_weights');
             $table->foreignId('second_criteria_id')->references('id')->on('criterias');
+            $table->float('value');
+            $table->integer('choosen');
             $table->timestamps();
         });
     }

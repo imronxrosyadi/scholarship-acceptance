@@ -16,6 +16,7 @@ class StoreCriteriaComparisonRequest extends FormRequest
         return [
             'type' => 'required',
             'id' => 'array',
+            'choosen' => 'array',
             'firstCriteria' => 'required|array',
             'valueWeight' => 'required|array',
             'secondCriteria' => 'required|array',
@@ -32,6 +33,7 @@ class StoreCriteriaComparisonRequest extends FormRequest
         return [
             'type.required' => 'Type is required',
             'id.array' => 'Id must be array',
+            'choosen.array' => 'Choosen must be array',
             'firstCriteria.required' => 'First Criteria is required!',
             'firstCriteria.array' => 'First Criteria is required!',
             'valueWeight.required' => 'Value Weight is required!',
