@@ -11,6 +11,7 @@ use App\Models\PriorityVectorAlternative;
 use App\Models\PriorityVectorCriteria;
 use App\Models\Rank;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class CalculateController extends Controller
 {
@@ -47,10 +48,9 @@ class CalculateController extends Controller
         $calculateAlternatives = [];
         if (count($alternativeComparisons) > 0) {
             $urut = 0;
-            // @dd(count($distinctAlternativeCompare));
             for($i=0; $i < count($distinctAlternativeCompare); $i++) {
-                $calculateAlternative = $this->calculateAlternative($alternatives, $alternativeComparisons, $urut);
-                // @dd($calculateAlternative);
+                $alternativeComparison = AlternativeComparison::where('criteria_id',$distinctAlternativeCompare[$i]->criteria_id)->get();
+                $calculateAlternative = $this->calculateAlternative($alternatives, $alternativeComparison, $urut); 
                 array_push($calculateAlternatives, $calculateAlternative);
                 $urut++;
             }
@@ -162,6 +162,7 @@ class CalculateController extends Controller
                 for ($y = ($x + 1); $y <=  $clength - 1; $y++) {
                     $matrik[$x][$y] = $alternativeComparisons[$urut]->value;
                     $matrik[$y][$x] = 1 / $alternativeComparisons[$urut]->value;
+                    echo "ini".$alternativeComparisons[$urut]->value;
                     $urut++;
                 }
             }
@@ -246,7 +247,7 @@ class CalculateController extends Controller
 
         $pvCriteria = $pvCriteria = PriorityVectorCriteria::where('criteria_id', $id_kriteria)->first();
     
-        return $pvCriteria['value'];
+        return $pvCriteria['value'] ?? 0;
     }
 
 
