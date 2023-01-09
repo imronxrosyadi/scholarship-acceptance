@@ -24,7 +24,7 @@ class AlternativeComparisonController extends Controller
             'criterias',
             'valueWeights'
         ])->get();
-        
+
         $valueWeights = ValueWeight::all();
 
         $criterias = Criteria::all();
@@ -59,7 +59,7 @@ class AlternativeComparisonController extends Controller
      */
     public function store(StoreAlternativeComparisonRequest $request)
     {
-        // @dd($request);
+        $criteriaName = Criteria::where('id', $request->criteria)->first(["name"]);
         if ($request->type == 'create') {
             $size = count($request->firstAlternatives);
             for($i = 0; $i <= $size-1; $i++) {
@@ -98,7 +98,7 @@ class AlternativeComparisonController extends Controller
             }
         }
 
-        return $this->index();
+        return redirect('/calculate/alternative-comparison')->with('success', 'Alternative Comparison for "' . $criteriaName->name .  '" successfully sumbitted!');
     }
 
     /**

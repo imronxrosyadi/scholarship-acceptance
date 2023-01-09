@@ -106,17 +106,20 @@ Route::get('/dashboard', function() {
 // Route::post('/candidate', [CandidateController::class, 'store']);
 
 Route::resource('/alternative', AlternativeController::class);
+Route::get('/alternative/delete/{id}', [AlternativeController::class, 'delete']);
 
 // Route::get('/criteria', [CriteriaController::class, 'index']);
 // Route::get('/criteria/create', [CriteriaController::class, 'create']);
 // Route::post('/criteria', [CriteriaController::class, 'store']);
 
 Route::resource('/criteria', CriteriaController::class);
+Route::get('/criteria/delete/{id}', [CriteriaController::class, 'delete']);
 
 // Route::get('/value-weight', [ValueWeightController::class, 'index']);
 // Route::post('/value-weight', [ValueWeightController::class, 'store']);
 
 Route::resource('/value-weight', ValueWeightController::class);
+Route::get('/value-weight/delete/{id}', [ValueWeightController::class, 'delete']);
 
 Route::prefix('/calculate')->group(function () {
     Route::get('/criteria-comparison', [CriteriaComparisonController::class, 'index']);

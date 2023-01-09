@@ -35,61 +35,54 @@ class CalculateController extends Controller
             'criterias'
         ])->get();
 
-        // @dd($criteriaComparisons);
         $criterias = Criteria::all();
         $alternatives = Alternative::all();
         $distinctAlternativeCompare = AlternativeComparison::distinct()->get(["criteria_id"]);
         $calculateCriteria =[];
-       
+
         if(count($criteriaComparisons) > 0){
             $calculateCriteria = $this->calculateCriteria($criterias, $criteriaComparisons);
         }
-       
+
         $calculateAlternatives = [];
         if (count($alternativeComparisons) > 0) {
             $urut = 0;
             for($i=0; $i < count($distinctAlternativeCompare); $i++) {
                 $alternativeComparison = AlternativeComparison::where('criteria_id',$distinctAlternativeCompare[$i]->criteria_id)->get();
-                $calculateAlternative = $this->calculateAlternative($alternatives, $alternativeComparison, $urut); 
+                $calculateAlternative = $this->calculateAlternative($alternatives, $alternativeComparison, $urut);
                 array_push($calculateAlternatives, $calculateAlternative);
                 $urut++;
             }
         }
 
-        $resultCriteriaPv = array();
-        $resultAlternativePv = array();
-        for($i=0; $i <= count($criterias)-1; $i++) {
-            $resCritPv = $this->resultCriteria($i);
-            array_push($resultCriteriaPv, $resCritPv);
-            for($j=0; $j <= count($alternatives)-1; $j++) {
-                $resAltPv = $this->resultAlternative($i, $j);
-                array_push($resultAlternativePv, $resAltPv);
-            }
-        }
-
-        
-        $valueResult = array();
-        for($i=0; $i <= count($alternatives)-1; $i++) {
-            $valueResult[$i] = 0;
-            for($j=0; $j <= count($criterias)-1; $j++) {
-                $resAltPv = $this->resultAlternative($j, $i);
-                $resCritPv = $this->resultCriteria($j);
-                $valueResult[$i] += ($resAltPv * $resCritPv);
-            }
-        }
-
-        // @dd($resultCriteriaPv, $resultAlternativePv);
-
-
-        $distinctPvAlternative = count(PriorityVectorAlternative::distinct()->get(["alternative_id"]));
+        $distinctPvAlternative = count(PriorityVectorAlternative::distinct()->get(["criteria_id"]));
         $distinctPvCriteria = count(PriorityVectorCriteria::distinct()->get(["criteria_id"]));
 
+        $resultCriteriaPv = array();
+        $resultAlternativePv = array();
+        $valueResult = array();
         $rank=[];
-        if((count($alternatives)==$distinctPvAlternative) &&(count($criterias)==$distinctPvCriteria)){
+
+        if ((count($criterias)==$distinctPvAlternative) && (count($criterias)==$distinctPvCriteria)) {
+            for($i=0; $i <= count($criterias)-1; $i++) {
+                $resCritPv = $this->resultCriteria($i);
+                array_push($resultCriteriaPv, $resCritPv);
+                for($j=0; $j <= count($alternatives)-1; $j++) {
+                    $resAltPv = $this->resultAlternative($i, $j);
+                    array_push($resultAlternativePv, $resAltPv);
+                }
+            }
+
+            for($i=0; $i <= count($alternatives)-1; $i++) {
+                $valueResult[$i] = 0;
+                for($j=0; $j <= count($criterias)-1; $j++) {
+                    $resAltPv = $this->resultAlternative($j, $i);
+                    $resCritPv = $this->resultCriteria($j);
+                    $valueResult[$i] += ($resAltPv * $resCritPv);
+                }
+            }
+
             $rank = $this->calulateResult(count($criterias),count($alternatives));
-            // @dump($rank[0]->alternative_id);
-        } else {
-            echo "Please Complete Form";
         }
 
         return view('calculate.index', [
@@ -101,6 +94,8 @@ class CalculateController extends Controller
             'calculateAlternatives' => $calculateAlternatives,
             'resultCriteriaPv' => $resultCriteriaPv,
             'resultAlternativePv' => $resultAlternativePv,
+            'distinctPvAlternative' => $distinctPvAlternative,
+            'distinctPvCriteria' => $distinctPvCriteria,
             'valueResult' => $valueResult,
             'rank'=> $rank
         ]);
@@ -108,12 +103,12 @@ class CalculateController extends Controller
 
     }
 
-    function resultAlternative($x, $y) 
+    function resultAlternative($x, $y)
     {
         return round($this->getAlternatifPV($this->getAlternatifID($y)->id, $this->getKriteriaID($x)->id), 5);
     }
 
-    function resultCriteria($urut) 
+    function resultCriteria($urut)
     {
         return round($this->getKriteriaPV($this->getKriteriaID($urut)->id),5);
     }
@@ -123,7 +118,7 @@ class CalculateController extends Controller
         for ($x=0; $x <= ($jmlAlternatif-1); $x++) {
             // inisialisasi
             $nilai[$x] = 0;
-        
+
             for ($y=0; $y <= ($jmlKriteria-1); $y++) {
                 $id_alternatif 	= $this->getAlternatifID($x);
                 $id_kriteria	= $this->getKriteriaID($y);
@@ -133,7 +128,7 @@ class CalculateController extends Controller
             }
         }
         // update nilai ranking
-        for ($i=0; $i <= ($jmlAlternatif-1); $i++) { 
+        for ($i=0; $i <= ($jmlAlternatif-1); $i++) {
             $id_alternatif = $this->getAlternatifID($i);
             $this->inputRangking($id_alternatif,$nilai[$i]);
         }
@@ -155,33 +150,25 @@ class CalculateController extends Controller
 
     function calculateAlternative($n, $alternativeComparisons, $criteriaId)
     {
+//        @dd($alternativeComparisons);
+            $clength = count($n);
             $matrik = array();
             $urut = 0;
-            $clength = count($n);
             for ($x = 0; $x <=  $clength - 2; $x++) {
                 for ($y = ($x + 1); $y <=  $clength - 1; $y++) {
                     $matrik[$x][$y] = $alternativeComparisons[$urut]->value;
                     $matrik[$y][$x] = 1 / $alternativeComparisons[$urut]->value;
-                    echo "ini".$alternativeComparisons[$urut]->value;
                     $urut++;
                 }
             }
-    
+
             // diagonal maka bernilai sama berat atau 1
             for ($i = 0; $i <= count($matrik) - 1; $i++) {
                 $matrik[$i][$i] = 1;
             }
-    
-            // print jadul
-            // for ($x = 0; $x <= ($clength - 1); $x++) {
-            //     for ($y = 0; $y <= ($clength - 1); $y++) {
-            //         echo ($matrik[$x][$y]) . "-";
-            //     }
-            // }
-    
+
             //matrik perbandingan kriteria sudah sesuai
-            // @dd($matrik);
-    
+
             // inisialisasi jumlah tiap kolom dan baris kriteria
             $jmlmpb = array();
             $jmlmnk = array();
@@ -189,7 +176,7 @@ class CalculateController extends Controller
                 $jmlmpb[$i] = 0;
                 $jmlmnk[$i] = 0;
             }
-    
+
             // menghitung jumlah pada kolom kriteria tabel perbandingan berpasangan
             for ($x = 0; $x <= ($clength - 1); $x++) {
                 for ($y = 0; $y <= ($clength - 1); $y++) {
@@ -197,8 +184,7 @@ class CalculateController extends Controller
                     $jmlmpb[$y] += $value;
                 }
             }
-    
-    
+
             // menghitung jumlah pada baris kriteria tabel nilai kriteria
             // matrikb merupakan matrik yang telah dinormalisasi
             for ($x = 0; $x <= ($clength - 1); $x++) {
@@ -207,21 +193,19 @@ class CalculateController extends Controller
                     $value    = $matrikb[$x][$y];
                     $jmlmnk[$x] += $value;
                 }
-    
+
                 // nilai priority vektor
                 $pv[$x]     = $jmlmnk[$x] /  $clength;
-    
+
                 // memasukkan nilai priority vektor ke dalam tabel pv_kriteria dan pv_alternatif
-                $id_kriteria	= $this->getKriteriaID($criteriaId);
+                $id_kriteria	= $this->getKriteriaID($criteriaId); //$criteriaId
                 $id_alternatif	= $this->getAlternatifID($x);
                 $this->inputAlternatifPV($id_alternatif,$id_kriteria,$pv[$x]);
             }
-    
+
             $eigenvektor = $this->getEigenVector($jmlmpb, $jmlmnk, $clength);
             $consIndex   = $this->getConsIndex($jmlmpb, $jmlmnk, $clength);
             $consRatio   = $this->getConsRatio($jmlmpb, $jmlmnk, $clength);
-            
-            // array_push($calculateAlternatives, $calculateAlternative);   <- taro di luar
 
         return $calculateAlternative[] = [
             'criteriaId' => $criteriaId,
@@ -233,7 +217,7 @@ class CalculateController extends Controller
             'eigenvektor' => $eigenvektor,
             'consIndex' => $consIndex,
             'consRatio' => $consRatio
-        ];;
+        ];
     }
 
     // mencari priority vector alternatif
@@ -246,7 +230,7 @@ class CalculateController extends Controller
      function getKriteriaPV($id_kriteria) {
 
         $pvCriteria = $pvCriteria = PriorityVectorCriteria::where('criteria_id', $id_kriteria)->first();
-    
+
         return $pvCriteria['value'] ?? 0;
     }
 
@@ -271,15 +255,7 @@ class CalculateController extends Controller
             $matrik[$i][$i] = 1;
         }
 
-        // print jadul
-        // for ($x = 0; $x <= ($clength - 1); $x++) {
-        //     for ($y = 0; $y <= ($clength - 1); $y++) {
-        //         echo ($matrik[$x][$y]) . "-";
-        //     }
-        // }
-
         //matrik perbandingan kriteria sudah sesuai
-        // @dd($matrik);
 
         // inisialisasi jumlah tiap kolom dan baris kriteria
         $jmlmpb = array();
@@ -319,7 +295,7 @@ class CalculateController extends Controller
         $consIndex   = $this->getConsIndex($jmlmpb, $jmlmnk, $clength);
         $consRatio   = $this->getConsRatio($jmlmpb, $jmlmnk, $clength);
 
-        
+
         return $calculateCriteria[] = [
             'matrik' => $matrik,
             'jmlmpb' => $jmlmpb,

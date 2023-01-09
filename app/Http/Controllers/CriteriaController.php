@@ -48,7 +48,8 @@ class CriteriaController extends Controller
 
         Criteria::create($validatedData);
 
-        return redirect('/criteria')->with('success', 'Created criteria success!');
+        return redirect('/criteria')
+            ->with('success', 'Created criteria success!');
     }
 
     /**
@@ -62,27 +63,34 @@ class CriteriaController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Criteria  $criteria
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Criteria $criteria)
+    public function edit($id)
     {
-        //
+        $criteria = Criteria::where('id', $id)->first();
+        return view('criteria.edit', [ "criteria" => $criteria ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Criteria  $criteria
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Criteria $criteria)
+    public function update(Request $request, $id)
     {
-        //
+        $criteria = Criteria::where('id', $id)->first();
+        $criteria->update([
+            'name'   => $request->name
+        ]);
+
+        return redirect()
+            ->route('criteria.index')
+            ->with('success','Criteria updated successfully');
+    }
+
+    public function delete($code)
+    {
+        $criteria = Criteria::where('id', $code)->first();
+        return view('criteria.delete', [ "criteria" => $criteria ]);
     }
 
     /**
@@ -91,8 +99,24 @@ class CriteriaController extends Controller
      * @param  \App\Models\Criteria  $criteria
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Criteria $criteria)
+    public function destroy($code)
     {
-        //
+        $criteria = Criteria::where('id', $code)->firstorfail()->delete();
+
+        $page = 'criteria.index';
+        $success = '';
+        $err = '';
+        if($criteria) {
+            $success = 'Criteria deleted successfully';
+        } else {
+            $err = 'Criteria deleted failure';
+        }
+
+        return redirect()
+            ->route($page)
+            ->with('success', $success)
+            ->with('err', $err);
     }
+
+
 }

@@ -2,6 +2,21 @@
 
 @section('container')
 <div class="row justify-content-center">
+
+    @if(session()->has('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if(session()->has('err'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('err') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="col-lg-10">
         <div class="row mb-3">
             <div class="col-lg-6">
@@ -15,8 +30,8 @@
             <div class="card-body">
                 <table class="table table-bordered" id="table" width="100%" cellspacing="0">
                     <thead class="bg-gradient-primary text-light">
-                        <tr> 
-                            <th colspan="3" class="text-center">Select what is more important</th> 
+                        <tr>
+                            <th colspan="3" class="text-center">Select what is more important</th>
                         </tr>
                         <tr>
                             <th>First Criteria</th>
@@ -65,8 +80,8 @@
                             </tr>
                             @endforeach
                             @else
-                            @for ($x = 0; $x <= (count($criterias)-2); $x++) 
-                            @for ($y=($x+1); $y <=(count($criterias)-1); $y++) 
+                            @for ($x = 0; $x <= (count($criterias)-2); $x++)
+                            @for ($y=($x+1); $y <=(count($criterias)-1); $y++)
                             <tr>
                                 @php $urut++; @endphp
                                 <input type="text" name="type" value="create" hidden>

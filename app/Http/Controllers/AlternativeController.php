@@ -23,7 +23,7 @@ class AlternativeController extends Controller
             'active' => 'alternative'
         ]);
     }
-    
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -35,8 +35,46 @@ class AlternativeController extends Controller
         return redirect('/alternative')->with('success', 'Created alternative success!');
     }
 
-    public function edit(Request $request)
+    public function edit($id)
     {
-        //
+        $alternative = Alternative::where('id', $id)->first();
+        return view('alternative.edit', [ "alternative" => $alternative ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $alternative = Alternative::where('id', $id)->first();
+        $alternative->update([
+            'name'   => $request->name
+        ]);
+
+        return redirect()
+            ->route('alternative.index')
+            ->with('success','Alternative updated successfully');
+    }
+
+    public function delete($code)
+    {
+        $alternative = Alternative::where('id', $code)->first();
+        return view('alternative.delete', [ "alternative" => $alternative ]);
+    }
+
+    public function destroy($code)
+    {
+        $alternative = Alternative::where('id', $code)->firstorfail()->delete();
+
+        $page = 'alternative.index';
+        $success = '';
+        $err = '';
+        if($alternative) {
+            $success = 'Alternative deleted successfully';
+        } else {
+            $err = 'Alternative deleted failure';
+        }
+
+        return redirect()
+            ->route($page)
+            ->with('success', $success)
+            ->with('err', $err);
     }
 }

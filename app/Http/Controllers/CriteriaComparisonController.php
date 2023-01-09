@@ -106,7 +106,7 @@ class CriteriaComparisonController extends Controller
             }
         }
 
-        return $this->index();
+        return redirect('/calculate/criteria-comparison')->with('success', 'Criteria Comparison successfully sumbitted!');
 
     }
 
