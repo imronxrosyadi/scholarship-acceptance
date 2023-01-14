@@ -12,7 +12,7 @@
 .table-row {
     cursor:pointer;
 }
-    
+
 
 .form-signin .form-floating:focus-within {
     z-index: 2;
@@ -44,4 +44,8 @@
     position:absolute;
     bottom:0;
     width:100%;
+}
+
+#home-content {
+    background-color: #4E73DF;
 }

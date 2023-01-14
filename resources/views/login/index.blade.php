@@ -19,7 +19,7 @@
 
     <div class="col-md-4">
         <main class="form-signin">
-            <h1 class="h3 mb-3 fw-normal text-center">Please Login</h1>
+            <h1 class="h3 mb-3 fw-normal text-center">Welcome!</h1>
             <form action="/login" method="post">
                 @csrf
                 <!-- <img class="mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
@@ -41,6 +41,6 @@
             </form>
             <small class="d-block text-center mt-3">Not registered?<a href="/register"> Register</a> </small>
         </main>
-    </div>  
+    </div>
 </div>
 @endsection

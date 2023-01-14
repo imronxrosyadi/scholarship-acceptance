@@ -1,5 +1,5 @@
 <!-- Topbar -->
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+<nav class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
 
     <!-- Sidebar Toggle (Topbar) -->
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -22,13 +22,7 @@
     <ul class="navbar-nav ml-auto">
 
         <li class="nav-item">
-            <a class="nav-link text-primary" href="/"><b>Algorithm</b></a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link text-primary" href="/"><b>About</b></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-primary" href="/"><b>Contact Us</b></a>
         </li>
 
         <div class="topbar-divider d-none d-sm-block"></div>
