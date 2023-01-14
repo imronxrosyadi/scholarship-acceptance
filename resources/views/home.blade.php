@@ -18,7 +18,7 @@
 @section('about')
     <div class="row justify-content-center">
         <div class="col-md-5 mt-5">
-            <img src="img/ahp.png" alt="ahp" style=" width: 800px; ">
+            <img src="img/ahp.png" alt="ahp" style=" width: 750px; ">
         </div>
         <div class="col-md-5 d-flex align-items-center">
             <div class="row">
