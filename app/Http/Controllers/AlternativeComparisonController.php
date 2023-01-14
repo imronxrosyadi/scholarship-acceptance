@@ -33,7 +33,7 @@ class AlternativeComparisonController extends Controller
 
         return view('alternative-comparison.index', [
             'title' => 'Alternative Comparison',
-            'active' => 'alternative-comparison',
+            'active' => 'calculate',
             'alternativeComparisons' => $alternativeComparisons,
             'valueWeights' => $valueWeights,
             'criterias' => $criterias,

@@ -13,7 +13,7 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item active">
+    <li class="nav-item {{ Request::is('dashboard') ? 'active' : '' }}">
         <a class="nav-link" href="/dashboard">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
@@ -22,25 +22,25 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <li class="nav-item">
-        <a class="nav-link {{ Request::is('alternative') ? 'active' : '' }}" href="/alternative">
+    <li class="nav-item {{ Request::is('alternative') ? 'active' : '' }}">
+        <a class="nav-link" href="/alternative">
             <i class="fas fa-user-friends"></i>
             <span>Alternative</span></a>
     </li>
 
-    <li class="nav-item">
-        <a class="nav-link {{ Request::is('value-weight') ? 'active' : '' }}" href="/value-weight">
+    <li class="nav-item {{ Request::is('value-weight') ? 'active' : '' }}">
+        <a class="nav-link" href="/value-weight">
             <i class="fas fa-balance-scale"></i>
             <span>Value Weight</span></a>
     </li>
 
-    <li class="nav-item">
-        <a class="nav-link {{ Request::is('criteria') ? 'active' : '' }}" href="/criteria">
+    <li class="nav-item  {{ Request::is('criteria') ? 'active' : '' }}">
+        <a class="nav-link" href="/criteria">
             <i class="fas fa-splotch"></i>
             <span>Criteria</span></a>
     </li>
 
-    <li class="nav-item">
+    <li class="nav-item {{ $active == 'calculate' ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
             <i class="fas fa-calculator"></i>
             <span>Calculate</span>
@@ -53,7 +53,7 @@
             </div>
         </div>
     </li>
-    
+
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 

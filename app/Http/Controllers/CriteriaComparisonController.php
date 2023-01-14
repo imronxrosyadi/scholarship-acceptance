@@ -32,7 +32,7 @@ class CriteriaComparisonController extends Controller
         // @dd($criteriaComparisons);
         return view('criteria-comparison.index', [
             'title' => 'Criteria Comparison',
-            'active' => 'criteria-comparison',
+            'active' => 'calculate',
             'criteriaComparisons' => $criteriaComparisons,
             'valueWeights' => $valueWeights,
             'criterias' => $criterias
