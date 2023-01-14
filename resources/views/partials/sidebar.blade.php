@@ -40,7 +40,7 @@
             <span>Criteria</span></a>
     </li>
 
-    <li class="nav-item {{ $active == 'calculate' ? 'active' : '' }}">
+    <li class="nav-item {{ (Request::is('calculate/result') || Request::is('calculate/criteria-comparison') || Request::is('calculate/alternative-comparison')) ? 'active' : '' }}">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
             <i class="fas fa-calculator"></i>
             <span>Calculate</span>
