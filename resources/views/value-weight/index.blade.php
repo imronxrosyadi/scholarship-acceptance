@@ -3,14 +3,14 @@
 @section('container')
 <div class="row justify-content-center">
 
-    @if(session()->has('success'))
+    @if(session()->has('success') && session()->get('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
 
-    @if(session()->has('err'))
+    @if(session()->has('err') && session()->get('err'))
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             {{ session('err') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

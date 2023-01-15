@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\AlternativeComparison;
+use App\Models\PriorityVectorAlternative;
+use App\Models\Rank;
 use App\Models\ValueWeight;
 use App\Models\Criteria;
 use App\Http\Requests\StoreAlternativeComparisonRequest;
@@ -26,10 +28,37 @@ class AlternativeComparisonController extends Controller
         ])->get();
 
         $valueWeights = ValueWeight::all();
-
         $criterias = Criteria::all();
-
         $alternatives = Alternative::all();
+
+        if (count($alternativeComparisons) > 0) {
+            $firstAlternatives = AlternativeComparison::distinct()->get(["first_alternative_id"]);
+            $secondAlternatives = AlternativeComparison::distinct()->get(["second_alternative_id"]);
+
+            $firstAlternativesN = array();
+            foreach ($firstAlternatives as $firstAlternative) {
+                array_push($firstAlternativesN, $firstAlternative->first_alternative_id);
+            }
+
+            $secondAlternativesN = array();
+            foreach ($secondAlternatives as $secondAlternative) {
+                array_push($secondAlternativesN, $secondAlternative->second_alternative_id);
+            }
+
+            $alternativesN = array();
+            foreach ($alternatives as $alternative) {
+                array_push($alternativesN, $alternative->id);
+            }
+
+            $alternativesCompared = array_unique(array_merge($firstAlternativesN,$secondAlternativesN));
+            $diffs = array_diff($alternativesN, $alternativesCompared);
+            if (count($diffs) > 0) {
+                AlternativeComparison::truncate();
+                Rank::truncate();
+                PriorityVectorAlternative::truncate();
+                $alternativeComparisons = [];
+            }
+        }
 
         return view('alternative-comparison.index', [
             'title' => 'Alternative Comparison',

@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AlternativeComparison;
+use App\Models\CriteriaComparison;
+use App\Models\PriorityVectorAlternative;
+use App\Models\PriorityVectorCriteria;
+use App\Models\Rank;
 use App\Models\ValueWeight;
 use Illuminate\Http\Request;
 
@@ -63,6 +68,16 @@ class ValueWeightController extends Controller
 
     public function destroy($code)
     {
+        $criteriaComparison = CriteriaComparison::where('value_weight_id', $code)->get();
+        $alternativeComparison = AlternativeComparison::where('value_weight_id', $code)->get();
+        if (count($criteriaComparison) > 0 || count($alternativeComparison) > 0) {
+            CriteriaComparison::truncate();
+            AlternativeComparison::truncate();
+            PriorityVectorCriteria::truncate();
+            PriorityVectorAlternative::truncate();
+            Rank::truncate();
+        }
+
         $valueWeight = ValueWeight::where('id', $code)->firstorfail()->delete();
 
         $page = 'value-weight.index';

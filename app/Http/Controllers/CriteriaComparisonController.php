@@ -6,6 +6,8 @@ use App\Models\CriteriaComparison;
 use App\Http\Requests\StoreCriteriaComparisonRequest;
 use App\Http\Requests\UpdateCriteriaComparisonRequest;
 use App\Models\Criteria;
+use App\Models\PriorityVectorCriteria;
+use App\Models\Rank;
 use App\Models\ValueWeight;
 
 class CriteriaComparisonController extends Controller
@@ -24,12 +26,40 @@ class CriteriaComparisonController extends Controller
         ])->get();
 
         $valueWeights = ValueWeight::all();
-
         $criterias = Criteria::all();
 
-        // $criteriaComparisons = CriteriaComparison::all();
+        if (count($criteriaComparisons) > 0) {
+            $firstCriterias = CriteriaComparison::distinct()->get(["first_criteria_id"]);
+            $secondCriterias = CriteriaComparison::distinct()->get(["second_criteria_id"]);
 
-        // @dd($criteriaComparisons);
+            $firstCriteriasN = array();
+            foreach ($firstCriterias as $firstCriterion) {
+                array_push($firstCriteriasN, $firstCriterion->first_criteria_id);
+            }
+
+            $secondCriteriasN = array();
+            foreach ($secondCriterias as $secondCriterion) {
+                array_push($secondCriteriasN, $secondCriterion->second_criteria_id);
+            }
+
+            $criteriasN = array();
+            foreach ($criterias as $criteria) {
+                array_push($criteriasN, $criteria->id);
+            }
+
+            $criteriasCompared = array_unique(array_merge($firstCriteriasN,$secondCriteriasN));
+            $diffs = array_diff($criteriasN, $criteriasCompared);
+            if (count($diffs) > 0) {
+                CriteriaComparison::truncate();
+                Rank::truncate();
+                PriorityVectorCriteria::truncate();
+                $criteriaComparisons = [];
+            }
+
+
+        }
+
+
         return view('criteria-comparison.index', [
             'title' => 'Criteria Comparison',
             'active' => 'calculate',

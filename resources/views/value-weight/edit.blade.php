@@ -18,7 +18,7 @@
                         <input type="hidden" name="id" value="{{ $valueweight->id }}" />
                         <div class="form mb-2">
                             <label for="name">Value</label>
-                            <input type="text" name="value" class="form-control rounded-top  @error('value') is-invalid @enderror" id="value" placeholder="Value" required value="{{ old('value', $valueweight->value) }}">
+                            <input type="text" name="value" class="form-control rounded-top  @error('value') is-invalid @enderror" id="value" placeholder="Value" required value="{{ old('value', $valueweight->value) }}" disabled>
                             @error('value')
                             <div class="invalid-feedback">
                                 {{ $message }}

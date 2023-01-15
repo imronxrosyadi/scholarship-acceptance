@@ -18,8 +18,8 @@
                     <div class="table-responsive">
                         <table class="table table-bordered" width="100%" cellspacing="0">
                             <thead class="bg-gradient-primary">
-                                <tr> 
-                                    <th colspan="3" class="text-center text-white">Select what is more important</th> 
+                                <tr>
+                                    <th colspan="3" class="text-center text-white">Select what is more important</th>
                                 </tr>
                                 <tr class="text-white">
                                     <th class="text-center">First Alternative</th>
@@ -62,8 +62,8 @@
                                         </tr>
                                     @endforeach
                                 @else
-                                    @for ($x = 0; $x <= (count($alternatives)-2); $x++) 
-                                        @for ($y=($x+1); $y <=(count($alternatives)-1); $y++) 
+                                    @for ($x = 0; $x <= (count($alternatives)-2); $x++)
+                                        @for ($y=($x+1); $y <=(count($alternatives)-1); $y++)
                                             @php $urut++; @endphp
                                             <tr>
                                                 <input type="text" name="type" value="create" hidden>
@@ -86,7 +86,7 @@
                                                 <td>
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="radio" name="choosen{{$urut}}" value="2" class="hidden">
-                                                        <label class="form-check-label" for="option1">    
+                                                        <label class="form-check-label" for="option1">
                                                             <input type="text" name="secondAlternatives[]" value="{{ $alternatives[$y]->id }}" hidden>{{ $alternatives[$y]->name }}
                                                         </label>
                                                     </div>
