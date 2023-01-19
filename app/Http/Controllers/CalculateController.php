@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreResultDownloadRequest;
 use App\Models\Alternative;
 use App\Models\AlternativeComparison;
 use App\Models\Criteria;
@@ -10,8 +11,8 @@ use App\Models\IndeksRandomConsistency;
 use App\Models\PriorityVectorAlternative;
 use App\Models\PriorityVectorCriteria;
 use App\Models\Rank;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 
 class CalculateController extends Controller
 {
@@ -101,6 +102,89 @@ class CalculateController extends Controller
         ]);
 
 
+    }
+
+    public function downloadPdf()
+    {
+        $criteriaComparisons = CriteriaComparison::with([
+            'firstCriterias',
+            'valueWeights',
+            'secondCriterias'
+        ])->get();
+
+        $alternativeComparisons = AlternativeComparison::with([
+            'firstAlternatives',
+            'valueWeights',
+            'secondAlternatives',
+            'criterias'
+        ])->get();
+
+        $criterias = Criteria::all();
+        $alternatives = Alternative::all();
+        $distinctAlternativeCompare = AlternativeComparison::distinct()->get(["criteria_id"]);
+        $calculateCriteria =[];
+
+        if(count($criteriaComparisons) > 0){
+            $calculateCriteria = $this->calculateCriteria($criterias, $criteriaComparisons);
+        }
+
+        $calculateAlternatives = [];
+        if (count($alternativeComparisons) > 0) {
+            $urut = 0;
+            for($i=0; $i < count($distinctAlternativeCompare); $i++) {
+                $alternativeComparison = AlternativeComparison::where('criteria_id',$distinctAlternativeCompare[$i]->criteria_id)->get();
+                $calculateAlternative = $this->calculateAlternative($alternatives, $alternativeComparison, $urut);
+                array_push($calculateAlternatives, $calculateAlternative);
+                $urut++;
+            }
+        }
+
+        $distinctPvAlternative = count(PriorityVectorAlternative::distinct()->get(["criteria_id"]));
+        $distinctPvCriteria = count(PriorityVectorCriteria::distinct()->get(["criteria_id"]));
+
+        $resultCriteriaPv = array();
+        $resultAlternativePv = array();
+        $valueResult = array();
+        $rank=[];
+
+        if ((count($criterias)==$distinctPvAlternative) && (count($criterias)==$distinctPvCriteria)) {
+            for($i=0; $i <= count($criterias)-1; $i++) {
+                $resCritPv = $this->resultCriteria($i);
+                array_push($resultCriteriaPv, $resCritPv);
+                for($j=0; $j <= count($alternatives)-1; $j++) {
+                    $resAltPv = $this->resultAlternative($i, $j);
+                    array_push($resultAlternativePv, $resAltPv);
+                }
+            }
+
+            for($i=0; $i <= count($alternatives)-1; $i++) {
+                $valueResult[$i] = 0;
+                for($j=0; $j <= count($criterias)-1; $j++) {
+                    $resAltPv = $this->resultAlternative($j, $i);
+                    $resCritPv = $this->resultCriteria($j);
+                    $valueResult[$i] += ($resAltPv * $resCritPv);
+                }
+            }
+
+            $rank = $this->calulateResult(count($criterias),count($alternatives));
+        }
+
+        $pdf = PDF::loadview('calculate.result-download', [
+            'title' => 'Calculate',
+            'active' => 'calculate',
+            'criterias' => $criterias,
+            'alternatives' => $alternatives,
+            'calculateCriteria' => $calculateCriteria,
+            'calculateAlternatives' => $calculateAlternatives,
+            'resultCriteriaPv' => $resultCriteriaPv,
+            'resultAlternativePv' => $resultAlternativePv,
+            'distinctPvAlternative' => $distinctPvAlternative,
+            'distinctPvCriteria' => $distinctPvCriteria,
+            'valueResult' => $valueResult,
+            'rank'=> $rank
+        ]);
+//        return $pdf->download('ahp-result');
+        return $pdf->stream();
     }
 
     function resultAlternative($x, $y)
