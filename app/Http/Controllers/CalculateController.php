@@ -12,6 +12,8 @@ use App\Models\PriorityVectorAlternative;
 use App\Models\PriorityVectorCriteria;
 use App\Models\Rank;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Http\Request;
 
 class CalculateController extends Controller
@@ -169,7 +171,18 @@ class CalculateController extends Controller
             $rank = $this->calulateResult(count($criterias),count($alternatives));
         }
 
-        $pdf = PDF::loadview('calculate.result-download', [
+//        $options = new Options();
+//        $options->set('isRemoteEnabled', true);
+//
+//        $dompdf = new Dompdf($options);
+//        $dompdf->loadHtml();
+//
+//
+//        $dompdf->setPaper("A4", "portrait");
+//        $dompdf->render();
+//        $dompdf->stream("file.pdf", ['Attachment' => false]);
+
+        $pdf = PDF::loadview('calculate.result-download-test', [
             'title' => 'Calculate',
             'active' => 'calculate',
             'criterias' => $criterias,
@@ -185,6 +198,20 @@ class CalculateController extends Controller
         ]);
 //        return $pdf->download('ahp-result');
         return $pdf->stream();
+//        return view('calculate.result-download-test', [
+//            'title' => 'Calculate',
+//            'active' => 'calculate',
+//            'criterias' => $criterias,
+//            'alternatives' => $alternatives,
+//            'calculateCriteria' => $calculateCriteria,
+//            'calculateAlternatives' => $calculateAlternatives,
+//            'resultCriteriaPv' => $resultCriteriaPv,
+//            'resultAlternativePv' => $resultAlternativePv,
+//            'distinctPvAlternative' => $distinctPvAlternative,
+//            'distinctPvCriteria' => $distinctPvCriteria,
+//            'valueResult' => $valueResult,
+//            'rank'=> $rank
+//        ]);
     }
 
     function resultAlternative($x, $y)

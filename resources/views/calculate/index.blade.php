@@ -337,7 +337,7 @@
                 <h4>Ranking</h4>
             </div>
             <div class="col-lg-6 text-right">
-                <a href="result/download" class="w-30 btn btn-md btn-primary mt-3" type="submit">Download</a>
+                <a href="result/download" target="_blank" class="w-30 btn btn-md btn-primary mt-3" type="submit">Download</a>
             </div>
         </div>
 
