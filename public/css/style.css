@@ -40,6 +40,14 @@
     margin-bottom: 2px;
 }
 
+.sign-on {
+    margin-top: 150px;
+}
+
+.sign-on-name {
+    margin-top: 100px;
+}
+
 #footer {
     position:absolute;
     bottom:0;

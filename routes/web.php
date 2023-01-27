@@ -74,7 +74,9 @@ Route::prefix('/calculate')->group(function () {
     Route::post('/alternative-comparison', [AlternativeComparisonController::class, 'store'])->name('alternative-comparison.store');
 
     Route::get('/result', [CalculateController::class, 'index']);
-    Route::get('/result/download', [CalculateController::class, 'downloadPdf'])->name('calculate-download');
+//    Route::get('/result/download', [CalculateController::class, 'downloadPdf'])->name('calculate-download');
+    Route::get('/result/print', [CalculateController::class, 'report'])->name('calculate-report');
+    Route::get('/result/print/decree', [CalculateController::class, 'decree'])->name('decree');
 
 });
 

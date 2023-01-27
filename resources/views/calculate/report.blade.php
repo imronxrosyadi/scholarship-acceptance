@@ -3,25 +3,37 @@
 @section('container')
     <div class="row justify-content-center">
         <div class="col-lg-12">
-            <div class="row mb-3">
-                <div class="col-lg-6">
-                    <h3 class="m-0 font-weight-bold text-primary">Calculate - AHP (Analytical Hierarchy Process)</h3>
+            <div class="header-report d-flex">
+                <div class="row-lg-3">
+                    <img src="{{ asset('img/al-fath.png') }}" alt="al-fath" width="150px" height="150px">
+                </div>
+                <div class="row-lg-6 justify-content-center">
+                    <h5>AL-FATH SCHOOL INDONESIA</h5>
+                    <h5>SMA-SMP-SD-TK-KB</h5>
+                    <h5>CIRENDEU - BUMI SERPONG DAMAI</h5>
+                    <h6>Jl. Raya Cirendeu No.24, Pisangan, Kec. Ciputat Timur, Kota Tangerang Selatan,<br> Banten 15419 Telp. (021) 7415419</h6>
                 </div>
             </div>
+
             <hr>
-            <div class="row mb-3 mt-5">
+
+            <div class="title-report text-center">
+                <h6>LAPORAN HASIL SISTEM PENUNJANG KEPUTUSAN PENERIMAAN BEASISWA</h6>
+            </div>
+{{--            <hr>--}}
+            <div class="row mb-1 mt-1">
                 <div class="col-lg-6">
-                    <h4>Criteria</h4>
+                    <h6>Criteria</h6>
                 </div>
             </div>
             @if(count($calculateCriteria)>0)
-                <div class="card shadow mb-4 mt-3">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Criteria Comparison Table</h6>
-                    </div>
+                <div class="mb-1 mt-1">
+{{--                    <div class="card-header py-3">--}}
+                        <h6 class="m-0 font-weight-bold text-primary mb-1">Criteria Comparison Table</h6>
+{{--                    </div>--}}
 
-                    <div class="card-body">
-                        <div class="table-responsive">
+{{--                    <div class="card-body">--}}
+{{--                        <div class="table-responsive">--}}
                             <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
@@ -54,16 +66,16 @@
                                 </tr>
                                 </tfoot>
                             </table>
-                        </div>
-                    </div>
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </div>
 
-                <div class="card shadow mb-4 mt-5">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Matrix Value Criteria</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
+                <div class="mb-1 mt-1">
+{{--                    <div class="card-header py-3">--}}
+                        <h6 class="m-0 font-weight-bold text-primary mb-1">Matrix Value Criteria</h6>
+{{--                    </div>--}}
+{{--                    <div class="card-body">--}}
+{{--                        <div class="table-responsive">--}}
                             <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
@@ -108,8 +120,8 @@
                                 </tr>
                                 </tfoot>
                             </table>
-                        </div>
-                    </div>
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </div>
 
                 @if(round(($calculateCriteria['consRatio'] * 100),2) > 10)
@@ -136,20 +148,20 @@
             <!-- below is alternative comparison calculate -->
 
             <hr>
-            <div class="row mb-2 mt-5">
+            <div class="row mb-1 mt-1">
                 <div class="col-lg-6">
-                    <h4>Alternative</h4>
+                    <h6>Alternative</h6>
                 </div>
             </div>
 
             @if (count($calculateAlternatives) > 0)
                 @for($i = 0; $i <= count($calculateAlternatives)-1; $i++)
-                    <div class="card shadow mb-4 mt-3">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Alternative Comparison - {{ $criterias[$calculateAlternatives[$i]['criteriaId']]->name }}</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
+                    <div class="mb-4 mt-3">
+{{--                        <div class="card-header py-3">--}}
+                            <h6 class="m-0 font-weight-bold text-primary mb-1">Alternative Comparison - {{ $criterias[$calculateAlternatives[$i]['criteriaId']]->name }}</h6>
+{{--                        </div>--}}
+{{--                        <div class="card-body">--}}
+{{--                            <div class="table-responsive">--}}
                                 <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                                     <thead>
                                     <tr>
@@ -182,16 +194,16 @@
                                     </tr>
                                     </tfoot>
                                 </table>
-                            </div>
-                        </div>
+{{--                            </div>--}}
+{{--                        </div>--}}
                     </div>
 
-                    <div class="card shadow mb-4 mt-5">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Matrix Value Alternative - {{ $criterias[$calculateAlternatives[$i]['criteriaId']]->name }}</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
+                    <div class="mb-4 mt-5">
+{{--                        <div class="card-header py-3">--}}
+                            <h6 class="m-0 font-weight-bold text-primary mb-1">Matrix Value Alternative - {{ $criterias[$calculateAlternatives[$i]['criteriaId']]->name }}</h6>
+{{--                        </div>--}}
+{{--                        <div class="card-body">--}}
+{{--                            <div class="table-responsive">--}}
                                 <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                                     <thead>
                                     <tr>
@@ -236,8 +248,8 @@
                                     </tr>
                                     </tfoot>
                                 </table>
-                            </div>
-                        </div>
+{{--                            </div>--}}
+{{--                        </div>--}}
                     </div>
 
                     @if(round(($calculateAlternatives[$i]['consRatio'] * 100),2) > 10)
@@ -264,19 +276,19 @@
 
             <!--RESULT CALCULATION-->
             <hr>
-            <div class="row mb-2 mt-5">
+            <div class="row mb-1 mt-1">
                 <div class="col-lg-6">
-                    <h4>Result</h4>
+                    <h6>Result</h6>
                 </div>
             </div>
 
             @if ((count($criterias)==$distinctPvAlternative) && (count($criterias)==$distinctPvCriteria))
-                <div class="card shadow mb-4 mt-3">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Calculation Result</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
+                <div class="mb-4 mt-3">
+{{--                    <div class="card-header py-3">--}}
+                        <h6 class="m-0 font-weight-bold text-primary mb-1">Calculation Result</h6>
+{{--                    </div>--}}
+{{--                    <div class="card-body">--}}
+{{--                        <div class="table-responsive">--}}
                             <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
@@ -315,8 +327,8 @@
                                 </tr>
                                 </tfoot>
                             </table>
-                        </div>
-                    </div>
+{{--                        </div>--}}
+{{--                    </div>--}}
                 </div>
             @else
                 <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
@@ -332,50 +344,20 @@
 
             <!-- RANKING SECTION -->
             <hr>
-            <div class="row mb-2 mt-5">
+            <div class="row mb-1 mt-1">
                 <div class="col-lg-6">
-                    <h4>Ranking</h4>
-                </div>
-                <div class="col-lg-6 text-right">
-                    <a href="result/download" target="_blank" class="w-30 btn btn-md btn-primary mt-3" type="submit">Download</a>
+                    <h6>Ranking</h6>
                 </div>
             </div>
 
             @if(count($rank) > 0)
-                {{--            <form action="{{ route('calculate-download') }}" method="post">--}}
-                {{--                @csrf--}}
-                {{--                <!-- Equivalent to... -->--}}
-                {{--                <input type="hidden" name="_token" value="{{ csrf_token() }}" />--}}
-                {{--                <input type="hidden" name="criterias" value="{{ $criterias }}" />--}}
-                {{--                <input type="hidden" name="alternatives" value="{{ $alternatives }}" />--}}
-                {{--                <input type="hidden" name="calculateCriteria" value="{{ $calculateCriteria }}" />--}}
-                {{--                <input type="hidden" name="calculateAlternatives" value="{{ $calculateAlternatives }}" />--}}
-                {{--                <input type="hidden" name="resultCriteriaPv" value="{{ $resultCriteriaPv }}" />--}}
-                {{--                <input type="hidden" name="resultAlternativePv" value="{{ $resultAlternativePv }}" />--}}
-                {{--                <input type="hidden" name="distinctPvAlternative" value="{{ $distinctPvAlternative }}" />--}}
-                {{--                <input type="hidden" name="distinctPvCriteria" value="{{ $distinctPvCriteria }}" />--}}
-                {{--                <input type="hidden" name="valueResult" value="{{ $valueResult }}" />--}}
-                {{--                <input type="hidden" name="rank" value="{{ $rank }}" />--}}
-                {{--                <!-- encoded -->--}}
-                {{--                <input type="hidden" name="criterias[]" value="{{ json_encode($criterias) }}" />--}}
-                {{--                <input type="hidden" name="alternatives[]" value="{{ json_encode($alternatives) }}" />--}}
-                {{--                <input type="hidden" name="calculateCriteria[]" value="{{ json_encode($calculateCriteria) }}" />--}}
-                {{--                <input type="hidden" name="calculateAlternatives[]" value="{{ json_encode($calculateAlternatives) }}" />--}}
-                {{--                <input type="hidden" name="resultCriteriaPv[]" value="{{ json_encode($resultCriteriaPv) }}" />--}}
-                {{--                <input type="hidden" name="resultAlternativePv[]" value="{{ json_encode($resultAlternativePv) }}" />--}}
-                {{--                <input type="hidden" name="distinctPvAlternative[]" value="{{ json_encode($distinctPvAlternative) }}" />--}}
-                {{--                <input type="hidden" name="distinctPvCriteria[]" value="{{ json_encode($distinctPvCriteria) }}" />--}}
-                {{--                <input type="hidden" name="valueResult[]" value="{{ json_encode($valueResult) }}" />--}}
-                {{--                <input type="hidden" name="rank[]" value="{{ json_encode($rank) }}" />--}}
-                {{--                <button class="w-30 btn btn-md btn-primary mt-3" type="submit">Download</button>--}}
-                {{--            </form>--}}
                 <div class="row-md-4">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
+                    <div class="mb-4">
+{{--                        <div class="card-header py-3">--}}
                             <h6 class="m-0 font-weight-bold text-primary">Ranking</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
+{{--                        </div>--}}
+{{--                        <div class="card-body">--}}
+{{--                            <div class="table-responsive">--}}
                                 <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                                     <thead class="bg-gradient-primary">
                                     <tr class="text-white">
@@ -408,8 +390,8 @@
                                     @endforeach
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
+{{--                            </div>--}}
+{{--                        </div>--}}
                     </div>
                 </div>
             @else
@@ -430,29 +412,30 @@
 @section('javascript_content')
 
     <script>
-        // function generatePDF() {
-        //     var opt = {
-        //         margin: [0.5, 0, 0, 0],
-        //         filename: 'report-scholarship-acceptance.pdf',
-        //         image: {
-        //             type: 'jpeg',
-        //             quality: 0.98
-        //         },
-        //         html2canvas: {
-        //             scale: 2
-        //         },
-        //         jsPDF: {
-        //             unit: 'in',
-        //             format: 'letter',
-        //             orientation: 'landscape'
-        //         },
-        //         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-        //     };
-        //
-        //     const element = document.getElementById('container-fluid');
-        //     html2pdf().set(opt).from(element).save();
-        // }
-        // generatePDF()
+        function generatePDF() {
+            var opt = {
+                margin: [0.5, 0, 0, 0],
+                filename: 'report-scholarship-acceptance.pdf',
+                image: {
+                    type: 'jpeg',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2
+                },
+                jsPDF: {
+                    unit: 'in',
+                    format: 'a4',
+                    orientation: 'landscape',
+                    fontSize: '9'
+                },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            const element = document.getElementById('container-fluid');
+            html2pdf().set(opt).from(element).save();
+        }
+        generatePDF()
     </script>
 
 @endsection

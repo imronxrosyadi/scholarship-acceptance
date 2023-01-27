@@ -7,6 +7,9 @@
             <div class="col-lg-6">
                 <h3 class="m-0 font-weight-bold text-primary">Calculate - AHP (Analytical Hierarchy Process)</h3>
             </div>
+            <div class="col-lg-6 text-right">
+                <a href="/calculate/result/print" target="_blank" class="m-0 btn btn-md btn-primary shadow-sm"><i class="fas fa-print text-white-50"></i> Print</a>
+            </div>
         </div>
         <hr>
         <div class="row mb-3 mt-5">
@@ -337,38 +340,11 @@
                 <h4>Ranking</h4>
             </div>
             <div class="col-lg-6 text-right">
-                <a href="result/download" target="_blank" class="w-30 btn btn-md btn-primary mt-3" type="submit">Download</a>
+                <a href="result/print/decree" target="_blank" class="btn btn-md btn-primary" type="submit">Download</a>
             </div>
         </div>
 
         @if(count($rank) > 0)
-{{--            <form action="{{ route('calculate-download') }}" method="post">--}}
-{{--                @csrf--}}
-{{--                <!-- Equivalent to... -->--}}
-{{--                <input type="hidden" name="_token" value="{{ csrf_token() }}" />--}}
-{{--                <input type="hidden" name="criterias" value="{{ $criterias }}" />--}}
-{{--                <input type="hidden" name="alternatives" value="{{ $alternatives }}" />--}}
-{{--                <input type="hidden" name="calculateCriteria" value="{{ $calculateCriteria }}" />--}}
-{{--                <input type="hidden" name="calculateAlternatives" value="{{ $calculateAlternatives }}" />--}}
-{{--                <input type="hidden" name="resultCriteriaPv" value="{{ $resultCriteriaPv }}" />--}}
-{{--                <input type="hidden" name="resultAlternativePv" value="{{ $resultAlternativePv }}" />--}}
-{{--                <input type="hidden" name="distinctPvAlternative" value="{{ $distinctPvAlternative }}" />--}}
-{{--                <input type="hidden" name="distinctPvCriteria" value="{{ $distinctPvCriteria }}" />--}}
-{{--                <input type="hidden" name="valueResult" value="{{ $valueResult }}" />--}}
-{{--                <input type="hidden" name="rank" value="{{ $rank }}" />--}}
-{{--                <!-- encoded -->--}}
-{{--                <input type="hidden" name="criterias[]" value="{{ json_encode($criterias) }}" />--}}
-{{--                <input type="hidden" name="alternatives[]" value="{{ json_encode($alternatives) }}" />--}}
-{{--                <input type="hidden" name="calculateCriteria[]" value="{{ json_encode($calculateCriteria) }}" />--}}
-{{--                <input type="hidden" name="calculateAlternatives[]" value="{{ json_encode($calculateAlternatives) }}" />--}}
-{{--                <input type="hidden" name="resultCriteriaPv[]" value="{{ json_encode($resultCriteriaPv) }}" />--}}
-{{--                <input type="hidden" name="resultAlternativePv[]" value="{{ json_encode($resultAlternativePv) }}" />--}}
-{{--                <input type="hidden" name="distinctPvAlternative[]" value="{{ json_encode($distinctPvAlternative) }}" />--}}
-{{--                <input type="hidden" name="distinctPvCriteria[]" value="{{ json_encode($distinctPvCriteria) }}" />--}}
-{{--                <input type="hidden" name="valueResult[]" value="{{ json_encode($valueResult) }}" />--}}
-{{--                <input type="hidden" name="rank[]" value="{{ json_encode($rank) }}" />--}}
-{{--                <button class="w-30 btn btn-md btn-primary mt-3" type="submit">Download</button>--}}
-{{--            </form>--}}
         <div class="row-md-4">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
