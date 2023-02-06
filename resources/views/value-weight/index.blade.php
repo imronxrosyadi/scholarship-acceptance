@@ -20,20 +20,20 @@
     <div class="col-lg-10">
         <div class="row mb-3">
             <div class="col-lg-6">
-                <h1>Value Weights</h1>
+                <h1>Nilai Bobot</h1>
             </div>
             <div class="col-lg-6 text-right">
                 <a href="/value-weight/create" class="btn btn-primary btn-icon">
                     <span class="icon text-white-50">
                         <i class="fas fa-plus"></i>
                     </span>
-                    <span class="text">Add Value Weight</span>
+                    <span class="text">Tambah Data Nilai Bobot</span>
                 </a>
             </div>
         </div>
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Value Weights Table</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Tabel Data Nilai Bobot</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -41,11 +41,11 @@
                         <thead>
                             <tr>
                                 <th scope="col">No</th>
-                                <th scope="col">Value</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Created At</th>
-                                <th scope="col">Last Update</th>
-                                <th scope="col">Action</th>
+                                <th scope="col">Nilai</th>
+                                <th scope="col">Deskripsi</th>
+                                <th scope="col">Waktu Dibuat</th>
+                                <th scope="col">Update Terakhir</th>
+                                <th scope="col">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>

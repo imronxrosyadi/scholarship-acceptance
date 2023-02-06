@@ -5,12 +5,12 @@
     <div class="col-lg-10">
         <div class="row mb-3">
             <div class="col-lg-6">
-                <h1>Alternative Comparison</h1>
+                <h1>Perbandingan Alternatif</h1>
             </div>
         </div>
         <div class="card shadow mb-4 mt-5">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Alternative Comparison - {{ $selectedCriteria->name }}</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Perbandingan Alternatif - {{ $selectedCriteria->name }}</h6>
             </div>
             <form action="{{ route('alternative-comparison.store') }}" method="POST">
                 @csrf
@@ -19,12 +19,12 @@
                         <table class="table table-bordered" width="100%" cellspacing="0">
                             <thead class="bg-gradient-primary">
                                 <tr>
-                                    <th colspan="3" class="text-center text-white">Select what is more important</th>
+                                    <th colspan="3" class="text-center text-white">Pilih yang lebih penting</th>
                                 </tr>
                                 <tr class="text-white">
-                                    <th class="text-center">First Alternative</th>
-                                    <th class="text-center">Value Weight</th>
-                                    <th class="text-center">Second Alternative</th>
+                                    <th class="text-center">Alternatif Pertama</th>
+                                    <th class="text-center">Nilai Bobot</th>
+                                    <th class="text-center">Alternatif Kedua</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -103,10 +103,10 @@
                 <div class="card-footer">
                     <div class="text-center">
                         <a class="btn btn-outline-danger" href="/calculate/alternative-comparison">
-                            <span class="text">Back</span>
+                            <span class="text">Kembali</span>
                         </a>
                         <button class="btn btn-primary btn">
-                            <span class="text">Submit</span>
+                            <span class="text">Simpan</span>
                         </button>
                     </div>
                 </div>

@@ -64,7 +64,7 @@
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span>&copy; Scholarship Acceptance 2023. All rights reserved.</span>
+                    <span>&copy; Al - Fath School Indonesia 2023. All rights reserved.</span>
                 </div>
             </div>
         </footer>
@@ -85,17 +85,17 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Yakin ingin keluar?</h5>
             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
-          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+          <div class="modal-body">Pilih "Keluar" di bawah ini jika anda yakin ingin keluar.</div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
             <form action="/logout" method="post">
               @csrf
-              <button type="submit" class="btn btn-primary">Logout</button>
+              <button type="submit" class="btn btn-primary">Keluar</button>
             </form>
           </div>
         </div>

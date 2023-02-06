@@ -21,20 +21,20 @@
     <div class="col-lg-10">
         <div class="row mb-3">
             <div class="col-lg-6">
-                <h1>Criterias</h1>
+                <h1>Kriteria</h1>
             </div>
             <div class="col-lg-6 text-right">
                 <a href="/criteria/create" class="btn btn-primary btn-icon">
                     <span class="icon text-white-50">
                         <i class="fas fa-plus"></i>
                     </span>
-                    <span class="text">Add Criteria</span>
+                    <span class="text">Tambah Data Kriteria</span>
                 </a>
             </div>
         </div>
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Criterias Table</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Tabel Data Kriteria</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -42,10 +42,10 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Name</th>
-                                <th>Created At</th>
-                                <th>Last Update</th>
-                                <th>Action</th>
+                                <th>Nama</th>
+                                <th>Waktu Dibuat</th>
+                                <th>Update Terakhir</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -19,13 +19,13 @@
 
     <div class="col-md-4">
         <main class="form-signin">
-            <h1 class="h3 mb-3 fw-normal text-center">Welcome!</h1>
+            <h1 class="h3 mb-3 fw-normal text-center">Selamat Datang!</h1>
             <form action="/login" method="post">
                 @csrf
                 <!-- <img class="mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
                 <div class="form-floating">
                     <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="email" placeholder="name@example.com" autofocus required value="{{ old('email') }}">
-                    <label for="email">Email address</label>
+                    <label for="email">Alamat Email</label>
                     @error('email')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -33,13 +33,13 @@
                     @enderror
                 </div>
                 <div class="form-floating">
-                    <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
-                    <label for="password">Password</label>
+                    <input type="password" name="password" class="form-control" id="password" placeholder="Kata Sandi" required>
+                    <label for="password">Kata Sandi</label>
                 </div>
-                <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Masuk</button>
                 <!-- <p class="mt-5 mb-3 text-muted">&copy; 2022–2023</p> -->
             </form>
-            <small class="d-block text-center mt-3">Not registered?<a href="/register"> Register</a> </small>
+            <small class="d-block text-center mt-3">Tidak terdaftar?<a href="/register"> Daftar</a> </small>
         </main>
     </div>
 </div>

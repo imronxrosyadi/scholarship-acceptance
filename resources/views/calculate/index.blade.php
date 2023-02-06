@@ -5,22 +5,22 @@
     <div class="col-lg-12">
         <div class="row mb-3">
             <div class="col-lg-6">
-                <h3 class="m-0 font-weight-bold text-primary">Calculate - AHP (Analytical Hierarchy Process)</h3>
+                <h3 class="m-0 font-weight-bold text-primary">Kalkulasi - AHP (Analytical Hierarchy Process)</h3>
             </div>
             <div class="col-lg-6 text-right">
-                <a href="/calculate/result/print" target="_blank" class="m-0 btn btn-md btn-primary shadow-sm"><i class="fas fa-print text-white-50"></i> Print</a>
+                <a href="/calculate/result/print" target="_blank" class="m-0 btn btn-md btn-primary shadow-sm"><i class="fas fa-print text-white-50"></i> Cetak</a>
             </div>
         </div>
         <hr>
         <div class="row mb-3 mt-5">
             <div class="col-lg-6">
-                <h4>Criteria</h4>
+                <h4>Kriteria</h4>
             </div>
         </div>
         @if(count($calculateCriteria)>0)
             <div class="card shadow mb-4 mt-3">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Criteria Comparison Table</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Tabel Perbandingan Kriteria</h6>
                 </div>
 
                 <div class="card-body">
@@ -28,7 +28,7 @@
                         <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                              <thead>
                                 <tr>
-                                    <th>Criteria</th>
+                                    <th>Kriteria</th>
                                     @php
                                         for ($x = 0; $x <= count($criterias)-1; $x++) {
                                             echo "<th>".$criterias[$x]->name."</th>";
@@ -63,14 +63,14 @@
 
             <div class="card shadow mb-4 mt-5">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Matrix Value Criteria</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Nilai Matrik Kriteria</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                              <thead>
                                 <tr>
-                                    <th>Criteria</th>
+                                    <th>Kriteria</th>
                                     @php
                                         for ($x = 0; $x <= count($criterias)-1; $x++) {
                                             echo "<th>".$criterias[$x]->name."</th>";
@@ -141,7 +141,7 @@
         <hr>
         <div class="row mb-2 mt-5">
             <div class="col-lg-6">
-                <h4>Alternative</h4>
+                <h4>Alternatif</h4>
             </div>
         </div>
 
@@ -149,14 +149,14 @@
             @for($i = 0; $i <= count($calculateAlternatives)-1; $i++)
                 <div class="card shadow mb-4 mt-3">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Alternative Comparison - {{ $criterias[$calculateAlternatives[$i]['criteriaId']]->name }}</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Perbandingan Alternatif - {{ $criterias[$calculateAlternatives[$i]['criteriaId']]->name }}</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                                  <thead>
                                     <tr>
-                                        <th>Alternative</th>
+                                        <th>Alternatif</th>
                                         @php
                                             for ($x = 0; $x <= count($alternatives)-1; $x++) {
                                                 echo "<th>".$alternatives[$x]->name."</th>";
@@ -191,14 +191,14 @@
 
                 <div class="card shadow mb-4 mt-5">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Matrix Value Alternative - {{ $criterias[$calculateAlternatives[$i]['criteriaId']]->name }}</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Nilai Matriks Alternatif - {{ $criterias[$calculateAlternatives[$i]['criteriaId']]->name }}</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                                  <thead>
                                     <tr>
-                                        <th>Alternative</th>
+                                        <th>Alternatif</th>
                                         @php
                                             for ($x = 0; $x <= count($alternatives)-1; $x++) {
                                                 echo "<th>".$alternatives[$x]->name."</th>";
@@ -276,7 +276,7 @@
         @if ((count($criterias)==$distinctPvAlternative) && (count($criterias)==$distinctPvCriteria))
         <div class="card shadow mb-4 mt-3">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Calculation Result</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Hasil Kalkulasi</h6>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -337,10 +337,10 @@
         <hr>
         <div class="row mb-2 mt-5">
             <div class="col-lg-6">
-                <h4>Ranking</h4>
+                <h4>Peringkat</h4>
             </div>
             <div class="col-lg-6 text-right">
-                <a href="result/print/decree" target="_blank" class="btn btn-md btn-primary" type="submit">Download</a>
+                <a href="result/print/decree" target="_blank" class="btn btn-md btn-primary" type="submit">Unduh</a>
             </div>
         </div>
 
@@ -348,16 +348,16 @@
         <div class="row-md-4">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Ranking</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Peringkat</h6>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                             <thead class="bg-gradient-primary">
                                 <tr class="text-white">
-                                    <th class="">Rank</th>
-                                    <th class="">Alternative</th>
-                                    <th class="">Result</th>
+                                    <th class="">Peringkat</th>
+                                    <th class="">Alternatif</th>
+                                    <th class="">Hasil</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -372,7 +372,7 @@
                                                     {{$r->value}}
                                                 </div>
                                                 <div class="col-sm-10 text-right">
-                                                    <h5><span class="badge bg-primary">Best!</span></h5>
+                                                    <h5><span class="badge bg-primary">Terbaik! &#128077;</span></h5>
                                                 </div>
                                             </div>
 

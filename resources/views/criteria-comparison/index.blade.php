@@ -20,23 +20,23 @@
     <div class="col-lg-10">
         <div class="row mb-3">
             <div class="col-lg-6">
-                <h1>Criteria Comparison</h1>
+                <h1>Perbandingan Kriteria</h1>
             </div>
         </div>
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Criteria Comparison</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Perbandingan Kriteria</h6>
             </div>
             <div class="card-body">
                 <table class="table table-bordered" id="table" width="100%" cellspacing="0">
                     <thead class="bg-gradient-primary text-light">
                         <tr>
-                            <th colspan="3" class="text-center">Select what is more important</th>
+                            <th colspan="3" class="text-center">Pilih yang lebih penting</th>
                         </tr>
                         <tr>
-                            <th>First Criteria</th>
-                            <th>Value Weight</th>
-                            <th>Second Criteria</th>
+                            <th>Kriteria Pertama</th>
+                            <th>Nilai Bobot</th>
+                            <th>Kriteria Kedua</th>
                         </tr>
                     </thead>
 
@@ -120,7 +120,7 @@
             <div class="card-footer">
                 <div class="text-center">
                     <button class="btn btn-primary btn">
-                        <span class="text">Submit</span>
+                        <span class="text">Simpan</span>
                     </button>
                 </div>
             </div>
